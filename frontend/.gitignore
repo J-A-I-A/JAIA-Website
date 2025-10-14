@@ -1,18 +1,3 @@
-# Dependencies
-node_modules/
-*/node_modules/
-
-# Build outputs
-dist/
-build/
-*/dist/
-*/build/
-
-# Environment variables
-.env
-.env.local
-.env.*.local
-
 # Logs
 logs
 *.log
@@ -21,6 +6,11 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
 
 # Editor directories and files
 .vscode/*
@@ -32,9 +22,3 @@ lerna-debug.log*
 *.njsproj
 *.sln
 *.sw?
-
-# TypeScript
-*.tsbuildinfo
-
-# Testing
-coverage/

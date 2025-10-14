@@ -1,0 +1,46 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+docs/
+QUICKSTART.md
+
+# Development files
+.vscode/
+.idea/
+*.log
+npm-debug.log*
+
+# Node modules (will be installed during build)
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+
+# Build artifacts (will be generated during build)
+frontend/dist/
+backend/dist/
+
+# Environment files
+.env.local
+.env.*.local
+
+# Testing
+coverage/
+*.test.js
+*.test.ts
+*.spec.js
+*.spec.ts
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+*.swp
+*.swo
+*.swn
+*~
+
