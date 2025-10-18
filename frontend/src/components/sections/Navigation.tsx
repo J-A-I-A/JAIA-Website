@@ -12,6 +12,7 @@ export function Navigation() {
     { name: 'About', href: '/#about', isRoute: false },
     { name: 'Services', href: '/#services', isRoute: false },
     { name: 'Projects', href: '/projects', isRoute: true },
+    { name: 'Open Source', href: '/#opensource', isRoute: false },
     { name: 'Events', href: '/#events', isRoute: false },
     { name: 'Contact', href: '/#contact', isRoute: false },
   ];

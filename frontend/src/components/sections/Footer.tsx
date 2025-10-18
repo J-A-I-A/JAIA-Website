@@ -1,4 +1,4 @@
-import { MessageCircle, Youtube, Twitter, Facebook } from 'lucide-react';
+import { MessageCircle, Youtube, Twitter, Facebook, Github } from 'lucide-react';
 
 export function Footer() {
   const socialLinks = [
@@ -31,6 +31,12 @@ export function Footer() {
       href: 'https://www.facebook.com/groups/458315652207268', 
       icon: Facebook,
       color: 'hover:text-blue-600'
+    },
+    { 
+      name: 'GitHub', 
+      href: 'https://github.com/J-A-I-A/JAIA-Website', 
+      icon: Github,
+      color: 'hover:text-gray-600 dark:hover:text-gray-300'
     },
   ];
 
