@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { Calendar, Clock, MapPin, Users, Plus, Pencil, Trash2, Eye, EyeOff, Loader2, Star } from 'lucide-react';
+import { Calendar, Plus, Pencil, Trash2, Eye, EyeOff, Loader2, Star } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 export function EventManagement() {

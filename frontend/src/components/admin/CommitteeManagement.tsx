@@ -12,7 +12,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { UsersRound, Plus, Pencil, Trash2, User, UserPlus, Loader2, Shield } from 'lucide-react';
 
 export function CommitteeManagement() {
@@ -24,7 +23,6 @@ export function CommitteeManagement() {
   const [isCreating, setIsCreating] = useState(false);
   const [saving, setSaving] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCommittee, setSelectedCommittee] = useState<string | null>(null);
   const [showAddMember, setShowAddMember] = useState(false);
 
   // Form state
@@ -100,7 +98,7 @@ export function CommitteeManagement() {
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .select('id, full_name, email')
+        .select('*')
         .order('full_name', { ascending: true });
 
       if (error) throw error;
@@ -207,7 +205,6 @@ export function CommitteeManagement() {
       role: 'member',
       joined_date: new Date().toISOString().split('T')[0],
     });
-    setSelectedCommittee(committeeId);
     setShowAddMember(true);
   };
 

@@ -219,3 +219,4 @@ COMMENT ON FUNCTION prevent_admin_privilege_escalation() IS 'Security function: 
 COMMENT ON FUNCTION log_admin_profile_changes() IS 'Audit function: Logs all profile changes made by administrators.';
 COMMENT ON FUNCTION count_admins() IS 'Utility function: Returns total number of admin users in the system.';
 
+

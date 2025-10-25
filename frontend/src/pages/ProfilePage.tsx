@@ -157,7 +157,7 @@ export function ProfilePage() {
                     {profile.location}
                   </span>
                 )}
-                {user.email && (
+                {user?.email && (
                   <span className="flex items-center gap-1">
                     <Mail size={16} />
                     {user.email}

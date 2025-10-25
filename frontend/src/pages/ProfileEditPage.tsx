@@ -2,12 +2,17 @@ import { useEffect, useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import type { Profile, MembershipTier, ProfileVisibility } from '../types/profile';
+import type { Profile, ProfileVisibility } from '../types/profile';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
 import { Card } from '../components/ui/card';
-import { Save } from 'lucide-react';
+import { ProfilePhotoUpload } from '../components/ProfilePhotoUpload';
+import { Save, AlertCircle } from 'lucide-react';
+
+type ValidationErrors = {
+  [key: string]: string;
+};
 
 export function ProfileEditPage() {
   const { user } = useAuth();
@@ -15,6 +20,7 @@ export function ProfileEditPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{type: 'success' | 'error', text: string} | null>(null);
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
   
   const [formData, setFormData] = useState<Partial<Profile>>({
     full_name: '',
@@ -77,9 +83,93 @@ export function ProfileEditPage() {
     setLoading(false);
   };
 
+  const validateUrl = (url: string): boolean => {
+    if (!url) return true; // Empty is valid
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const validatePhone = (phone: string): boolean => {
+    if (!phone) return true; // Empty is valid
+    // Basic phone validation - at least 7 digits
+    const digitCount = phone.replace(/\D/g, '').length;
+    return digitCount >= 7 && digitCount <= 15;
+  };
+
+  const validateField = (fieldName: string, value: any): string | null => {
+    switch (fieldName) {
+      case 'linkedin_url':
+      case 'github_url':
+      case 'portfolio_url':
+      case 'resume_url':
+      case 'organization_website':
+        if (value && !validateUrl(value)) {
+          return 'Please enter a valid URL (e.g., https://example.com)';
+        }
+        break;
+      case 'phone':
+        if (value && !validatePhone(value)) {
+          return 'Please enter a valid phone number with 7-15 digits';
+        }
+        break;
+      case 'years_of_experience':
+        if (value !== null && value !== '' && (value < 0 || value > 100)) {
+          return 'Years of experience must be between 0 and 100';
+        }
+        break;
+      case 'full_name':
+        if (value && value.length > 100) {
+          return 'Full name must be less than 100 characters';
+        }
+        break;
+      case 'bio':
+        if (value && value.length > 1000) {
+          return 'Bio must be less than 1000 characters';
+        }
+        break;
+    }
+    return null;
+  };
+
+  const validateForm = (): boolean => {
+    const errors: ValidationErrors = {};
+    
+    Object.entries(formData).forEach(([key, value]) => {
+      const error = validateField(key, value);
+      if (error) {
+        errors[key] = error;
+      }
+    });
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleFieldChange = (fieldName: string, value: any) => {
+    setFormData({ ...formData, [fieldName]: value });
+    
+    // Clear validation error when user starts typing
+    if (validationErrors[fieldName]) {
+      const newErrors = { ...validationErrors };
+      delete newErrors[fieldName];
+      setValidationErrors(newErrors);
+    }
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!user) return;
+
+    // Validate form before submitting
+    if (!validateForm()) {
+      setMessage({ type: 'error', text: 'Please fix the validation errors before saving.' });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
 
     setSaving(true);
     setMessage(null);
@@ -142,6 +232,32 @@ export function ProfileEditPage() {
     setFormData({ ...formData, seeking_mentor_in: formData.seeking_mentor_in?.filter(a => a !== area) });
   };
 
+  const ValidationError = ({ error }: { error?: string }) => {
+    if (!error) return null;
+    return (
+      <div className="flex items-center gap-1 mt-1 text-sm text-red-600 dark:text-red-400">
+        <AlertCircle size={14} />
+        <span>{error}</span>
+      </div>
+    );
+  };
+
+  const SaveButtons = () => (
+    <div className="flex gap-4">
+      <Button 
+        type="submit" 
+        disabled={saving || Object.keys(validationErrors).length > 0} 
+        className="flex items-center gap-2"
+      >
+        <Save size={16} />
+        {saving ? 'Saving...' : 'Save Changes'}
+      </Button>
+      <Button type="button" variant="outline" onClick={() => navigate('/')}>
+        Back to Home
+      </Button>
+    </div>
+  );
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background pt-24 pb-16">
@@ -156,7 +272,10 @@ export function ProfileEditPage() {
     <div className="min-h-screen bg-background pt-24 pb-16">
       <div className="container mx-auto px-4 max-w-4xl">
         <Card className="p-8">
-          <h1 className="text-3xl font-bold mb-6">My Profile</h1>
+          <div className="flex justify-between items-start mb-6">
+            <h1 className="text-3xl font-bold">My Profile</h1>
+            <SaveButtons />
+          </div>
 
           {message && (
             <div className={`mb-6 p-4 rounded-lg ${
@@ -169,6 +288,19 @@ export function ProfileEditPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-8">
+            {/* Profile Photo */}
+            <section>
+              <h2 className="text-xl font-semibold mb-4">Profile Photo</h2>
+              {user && (
+                <ProfilePhotoUpload
+                  userId={user.id}
+                  currentAvatarUrl={formData.avatar_url || null}
+                  onUploadComplete={(url) => setFormData({ ...formData, avatar_url: url })}
+                  onRemove={() => setFormData({ ...formData, avatar_url: null })}
+                />
+              )}
+            </section>
+
             {/* Basic Information */}
             <section>
               <h2 className="text-xl font-semibold mb-4">Basic Information</h2>
@@ -177,19 +309,28 @@ export function ProfileEditPage() {
                   <label className="block text-sm font-medium mb-2">Full Name</label>
                   <Input
                     value={formData.full_name || ''}
-                    onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
+                    onChange={(e) => handleFieldChange('full_name', e.target.value)}
                     placeholder="Your full name"
+                    className={validationErrors.full_name ? 'border-red-500' : ''}
                   />
+                  <ValidationError error={validationErrors.full_name} />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium mb-2">Bio</label>
                   <Textarea
                     value={formData.bio || ''}
-                    onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                    onChange={(e) => handleFieldChange('bio', e.target.value)}
                     placeholder="Tell us about yourself..."
                     rows={4}
+                    className={validationErrors.bio ? 'border-red-500' : ''}
                   />
+                  <ValidationError error={validationErrors.bio} />
+                  {formData.bio && (
+                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      {formData.bio.length} / 1000 characters
+                    </div>
+                  )}
                 </div>
 
                 <div>
@@ -202,9 +343,11 @@ export function ProfileEditPage() {
                   <Input
                     type="tel"
                     value={formData.phone || ''}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    onChange={(e) => handleFieldChange('phone', e.target.value)}
                     placeholder="+1 (876) 123-4567"
+                    className={validationErrors.phone ? 'border-red-500' : ''}
                   />
+                  <ValidationError error={validationErrors.phone} />
                   {formData.phone && (
                     <div className="mt-2 flex items-center gap-2">
                       <input
@@ -280,10 +423,13 @@ export function ProfileEditPage() {
                     <Input
                       type="number"
                       value={formData.years_of_experience || ''}
-                      onChange={(e) => setFormData({ ...formData, years_of_experience: parseInt(e.target.value) || null })}
+                      onChange={(e) => handleFieldChange('years_of_experience', parseInt(e.target.value) || null)}
                       placeholder="5"
                       min="0"
+                      max="100"
+                      className={validationErrors.years_of_experience ? 'border-red-500' : ''}
                     />
+                    <ValidationError error={validationErrors.years_of_experience} />
                   </div>
                 </div>
               </div>
@@ -298,36 +444,44 @@ export function ProfileEditPage() {
                   <Input
                     type="url"
                     value={formData.linkedin_url || ''}
-                    onChange={(e) => setFormData({ ...formData, linkedin_url: e.target.value })}
+                    onChange={(e) => handleFieldChange('linkedin_url', e.target.value)}
                     placeholder="https://linkedin.com/in/yourprofile"
+                    className={validationErrors.linkedin_url ? 'border-red-500' : ''}
                   />
+                  <ValidationError error={validationErrors.linkedin_url} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">GitHub URL</label>
                   <Input
                     type="url"
                     value={formData.github_url || ''}
-                    onChange={(e) => setFormData({ ...formData, github_url: e.target.value })}
+                    onChange={(e) => handleFieldChange('github_url', e.target.value)}
                     placeholder="https://github.com/yourusername"
+                    className={validationErrors.github_url ? 'border-red-500' : ''}
                   />
+                  <ValidationError error={validationErrors.github_url} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">Portfolio URL</label>
                   <Input
                     type="url"
                     value={formData.portfolio_url || ''}
-                    onChange={(e) => setFormData({ ...formData, portfolio_url: e.target.value })}
+                    onChange={(e) => handleFieldChange('portfolio_url', e.target.value)}
                     placeholder="https://yourportfolio.com"
+                    className={validationErrors.portfolio_url ? 'border-red-500' : ''}
                   />
+                  <ValidationError error={validationErrors.portfolio_url} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">Resume URL</label>
                   <Input
                     type="url"
                     value={formData.resume_url || ''}
-                    onChange={(e) => setFormData({ ...formData, resume_url: e.target.value })}
+                    onChange={(e) => handleFieldChange('resume_url', e.target.value)}
                     placeholder="https://drive.google.com/..."
+                    className={validationErrors.resume_url ? 'border-red-500' : ''}
                   />
+                  <ValidationError error={validationErrors.resume_url} />
                 </div>
               </div>
             </section>
@@ -542,23 +696,19 @@ export function ProfileEditPage() {
                     <Input
                       type="url"
                       value={formData.organization_website || ''}
-                      onChange={(e) => setFormData({ ...formData, organization_website: e.target.value })}
+                      onChange={(e) => handleFieldChange('organization_website', e.target.value)}
                       placeholder="https://yourcompany.com"
+                      className={validationErrors.organization_website ? 'border-red-500' : ''}
                     />
+                    <ValidationError error={validationErrors.organization_website} />
                   </div>
                 </div>
               </section>
             )}
 
             {/* Submit Button */}
-            <div className="flex gap-4 pt-6">
-              <Button type="submit" disabled={saving} className="flex items-center gap-2">
-                <Save size={16} />
-                {saving ? 'Saving...' : 'Save Changes'}
-              </Button>
-              <Button type="button" variant="outline" onClick={() => navigate('/')}>
-                Back to Home
-              </Button>
+            <div className="pt-6">
+              <SaveButtons />
             </div>
           </form>
         </Card>

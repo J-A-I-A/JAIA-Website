@@ -78,19 +78,13 @@ export function AdminPage() {
 
   const fetchUsers = async () => {
     try {
-      // Fetch profiles
-      const { data: profiles, error: profilesError } = await supabase
-        .from('profiles')
-        .select('*')
-        .order('created_at', { ascending: false });
+      // Call the admin function that joins profiles with auth.users to get email
+      const { data, error } = await supabase
+        .rpc('admin_get_users_with_email');
 
-      if (profilesError) throw profilesError;
+      if (error) throw error;
 
-      // Fetch user emails from auth.users (requires service role in production)
-      // For now, we'll just use the profiles data
-      const usersWithEmails = profiles || [];
-      
-      setUsers(usersWithEmails);
+      setUsers(data || []);
     } catch (error) {
       console.error('Error fetching users:', error);
     }
