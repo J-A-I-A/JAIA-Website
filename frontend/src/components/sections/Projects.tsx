@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Folder, ChevronRight } from 'lucide-react';
+import { Folder, ChevronRight } from 'lucide-react';
 import { projects } from '@/data/projects';
 import { NeonButton } from '@/components/ui/neon-button';
 

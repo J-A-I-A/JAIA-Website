@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { MapPin, Phone, Mail, MessageCircle, Youtube, ExternalLink } from 'lucide-react';
+import { MapPin, Phone, Mail, MessageCircle, Youtube } from 'lucide-react';
 import { NeonButton } from '@/components/ui/neon-button';
 
 const socialLinks = [

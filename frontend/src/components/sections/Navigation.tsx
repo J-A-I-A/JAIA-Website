@@ -4,7 +4,6 @@ import { Menu, X, LogOut, User, Shield, Cpu, Wifi, Battery } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { AuthModal } from '../auth/AuthModal';
-import { Button } from '../ui/button';
 import { supabase } from '../../lib/supabase';
 
 export function Navigation() {

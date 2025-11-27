@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Calendar, MapPin, ArrowRight, Terminal, Video, Users } from 'lucide-react';
+import { MapPin, ArrowRight, Terminal, Video, Users } from 'lucide-react';
 import { NeonButton } from '@/components/ui/neon-button';
 import { supabase } from '@/lib/supabase';
 import { Event } from '@/types/events';
