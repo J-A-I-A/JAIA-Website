@@ -2,6 +2,8 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import crypto from 'crypto';
+import { createClient } from '@supabase/supabase-js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -10,7 +12,56 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const isDev = process.env.NODE_ENV !== 'production';
 
-// Middleware
+// Supabase client (service role for backend operations)
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabase = supabaseUrl && supabaseServiceKey 
+  ? createClient(supabaseUrl, supabaseServiceKey)
+  : null;
+
+// Fygaro webhook secret
+const fygaroSecret = process.env.FYGARO_WEBHOOK_SECRET;
+
+// Fygaro signature verification (per Fygaro docs)
+function verifyFygaroSignature(signature: string, rawBody: string, secret: string): boolean {
+  // Parse signature header: t=timestamp,v1=hash,v1=hash...
+  const parts = signature.split(',');
+  let timestamp: string | null = null;
+  const hashes: string[] = [];
+
+  for (const part of parts) {
+    const [key, value] = part.split('=');
+    if (key === 't') timestamp = value;
+    if (key === 'v1') hashes.push(value);
+  }
+
+  if (!timestamp || hashes.length === 0) {
+    return false;
+  }
+
+  // Optional: Check timestamp is within 5 minutes (replay protection)
+  const now = Math.floor(Date.now() / 1000);
+  if (Math.abs(now - parseInt(timestamp)) > 300) {
+    console.error('Fygaro webhook timestamp too old');
+    return false;
+  }
+
+  // Compute expected HMAC: message = timestamp + "." + rawBody
+  const message = `${timestamp}.${rawBody}`;
+  const expected = crypto.createHmac('sha256', secret).update(message).digest('hex');
+
+  // Check if any v1 hash matches (constant-time comparison)
+  for (const hash of hashes) {
+    if (crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(hash))) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+// Middleware - webhook route needs raw body for signature verification
+app.use('/api/webhooks/fygaro', express.raw({ type: 'application/json' }));
 app.use(cors());
 app.use(express.json());
 
@@ -38,6 +89,122 @@ app.get('/api/events', (req: Request, res: Response) => {
       date: '19th April 2025, 8pm'
     }
   ]);
+});
+
+// Fygaro webhook endpoint for payment notifications
+app.post('/api/webhooks/fygaro', async (req: Request, res: Response) => {
+  // Check if services are configured
+  if (!fygaroSecret) {
+    console.error('Fygaro webhook secret not configured');
+    res.status(500).json({ error: 'Webhook not configured' });
+    return;
+  }
+
+  if (!supabase) {
+    console.error('Supabase not configured');
+    res.status(500).json({ error: 'Database not configured' });
+    return;
+  }
+
+  // Verify signature
+  const signature = req.headers['fygaro-signature'] as string;
+  if (!signature) {
+    console.error('Missing Fygaro-Signature header');
+    res.status(400).json({ error: 'Missing signature' });
+    return;
+  }
+
+  const rawBody = req.body.toString();
+  
+  if (!verifyFygaroSignature(signature, rawBody, fygaroSecret)) {
+    console.error('Invalid Fygaro webhook signature');
+    res.status(400).json({ error: 'Invalid signature' });
+    return;
+  }
+
+  // Parse the payload
+  const payload = JSON.parse(rawBody);
+  console.log('Fygaro payment received:', payload.transactionId);
+
+  const {
+    transactionId,
+    reference,
+    amount,
+    currency,
+    client,
+    createdAt
+  } = payload;
+
+  const clientEmail = client?.email;
+
+  if (!clientEmail) {
+    console.error('No client email in payment payload');
+    res.status(400).json({ error: 'Missing client email' });
+    return;
+  }
+
+  // Find the user by email
+  const { data: authUser, error: authError } = await supabase.auth.admin.listUsers();
+  
+  if (authError) {
+    console.error('Error fetching users:', authError);
+    res.status(500).json({ error: 'Database error' });
+    return;
+  }
+
+  const user = authUser.users.find(u => u.email?.toLowerCase() === clientEmail.toLowerCase());
+  const userId = user?.id || null;
+
+  // Insert payment record
+  const { error: paymentError } = await supabase
+    .from('payments')
+    .insert({
+      user_id: userId,
+      transaction_id: transactionId,
+      amount: parseFloat(amount),
+      currency: currency || 'JMD',
+      status: 'completed',
+      fygaro_reference: reference,
+      client_email: clientEmail
+    });
+
+  if (paymentError) {
+    // Check if it's a duplicate transaction
+    if (paymentError.code === '23505') {
+      console.log('Duplicate transaction, already processed:', transactionId);
+      res.status(200).json({ status: 'already_processed' });
+      return;
+    }
+    console.error('Error inserting payment:', paymentError);
+    res.status(500).json({ error: 'Failed to record payment' });
+    return;
+  }
+
+  // If we found the user, update their membership status
+  if (userId) {
+    const expiryDate = new Date();
+    expiryDate.setFullYear(expiryDate.getFullYear() + 1); // Annual membership
+
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({
+        membership_status: 'active',
+        membership_expiry_date: expiryDate.toISOString()
+      })
+      .eq('id', userId);
+
+    if (updateError) {
+      console.error('Error updating membership status:', updateError);
+      // Don't fail the webhook - payment was recorded
+    } else {
+      console.log('Membership activated for user:', userId, 'until:', expiryDate);
+    }
+  } else {
+    console.log('Payment recorded but no matching user found for email:', clientEmail);
+  }
+
+  // Must respond 200 for Fygaro to mark webhook as successful
+  res.status(200).json({ status: 'ok', transactionId });
 });
 
 // In production, serve the static files from the React app

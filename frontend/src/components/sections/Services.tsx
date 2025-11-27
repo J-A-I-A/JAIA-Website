@@ -1,58 +1,118 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { GraduationCap, Briefcase, Code } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { GraduationCap, Briefcase, Code, Zap } from 'lucide-react';
+
+const services = [
+  {
+    id: "01",
+    icon: <GraduationCap className="w-8 h-8" />,
+    title: 'AI_TRAINING',
+    subtitle: 'Education & Workshops',
+    description: 'Comprehensive training programs to help you understand and master AI technologies. From beginner to advanced levels.',
+    stat: 'EDU'
+  },
+  {
+    id: "02",
+    icon: <Briefcase className="w-8 h-8" />,
+    title: 'CONSULTATION',
+    subtitle: 'Project Management',
+    description: 'Expert guidance for your AI projects from conception to deployment. Strategy and implementation support.',
+    stat: 'PRO'
+  },
+  {
+    id: "03",
+    icon: <Code className="w-8 h-8" />,
+    title: 'DEVELOPMENT',
+    subtitle: 'AI Strategy & Solutions',
+    description: 'Strategic development solutions tailored to your organization\'s needs. Custom AI implementations.',
+    stat: 'DEV'
+  },
+];
 
 export function Services() {
-  const services = [
-    {
-      number: '01',
-      title: 'A.I Training & Education',
-      icon: GraduationCap,
-      description: 'Comprehensive training programs to help you understand and master AI technologies',
-    },
-    {
-      number: '02',
-      title: 'A.I Project Management & Consultation',
-      icon: Briefcase,
-      description: 'Expert guidance for your AI projects from conception to deployment',
-    },
-    {
-      number: '03',
-      title: 'A.I Development & Strategy',
-      icon: Code,
-      description: 'Strategic development solutions tailored to your organization\'s needs',
-    },
-  ];
-
   return (
-    <section id="services" className="py-20 bg-muted/30 scroll-mt-16">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Services</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Empowering Jamaica through AI education, consultation, and development
+    <section id="services" className="py-32 bg-jaia-black relative overflow-hidden scroll-mt-16">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-cyber-grid bg-[size:40px_40px] opacity-10"></div>
+      
+      <div className="container mx-auto px-6 relative z-10">
+        
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row items-end justify-between mb-24 border-b border-jaia-gold/30 pb-8">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Zap className="w-4 h-4 text-jaia-gold" />
+              <span className="font-mono text-jaia-gold text-xs tracking-widest">SERVICE_MODULES</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-display font-bold text-white uppercase leading-none">
+              OUR<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-jaia-gold to-jaia-neonGold">CAPABILITIES</span>
+            </h2>
+          </div>
+          <p className="font-mono text-gray-500 text-sm max-w-xs text-right mt-6 md:mt-0">
+            // Empowering Jamaica through AI education, consultation, and development.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {services.map((service) => (
-            <Card key={service.number} className="hover:shadow-lg transition-shadow border-primary/10 hover:border-primary/30">
-              <CardHeader>
-                <div className="flex items-start justify-between mb-4">
-                  <div className="text-4xl font-bold text-primary/30">{service.number}</div>
-                  <div className="p-3 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg border border-primary/20">
-                    <service.icon className="h-6 w-6 text-primary" />
+        {/* Services Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {services.map((service, idx) => (
+            <motion.div
+              key={service.id}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.15 }}
+              className="group relative"
+            >
+              {/* Card Container */}
+              <div 
+                className="relative h-full bg-jaia-darkGrey/50 backdrop-blur-sm border border-white/5 p-8 transition-all duration-500 group-hover:bg-jaia-gold/5 group-hover:border-jaia-gold/30"
+                style={{ clipPath: "polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 30px 100%, 0 calc(100% - 30px))" }}
+              >
+                {/* Header with Icon and ID */}
+                <div className="flex justify-between items-start mb-8">
+                  <div className="p-4 bg-white/5 rounded-none border border-white/10 text-jaia-gold group-hover:bg-jaia-gold group-hover:text-black transition-colors duration-300">
+                    {service.icon}
                   </div>
+                  <span className="font-display font-bold text-5xl text-white/5 group-hover:text-jaia-gold/20 transition-colors">
+                    {service.id}
+                  </span>
                 </div>
-                <CardTitle className="text-xl">{service.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-base">{service.description}</CardDescription>
-              </CardContent>
-            </Card>
+
+                {/* Content */}
+                <h3 className="text-2xl font-display font-bold text-white mb-2 group-hover:text-jaia-gold transition-colors">
+                  {service.title}
+                </h3>
+                <p className="text-jaia-gold/70 font-mono text-xs mb-4">
+                  {service.subtitle}
+                </p>
+                <p className="text-gray-400 font-sans leading-relaxed text-sm mb-8">
+                  {service.description}
+                </p>
+
+                {/* Footer Stat */}
+                <div className="absolute bottom-0 left-0 w-full p-4 flex justify-between items-center border-t border-white/5 group-hover:border-jaia-gold/20">
+                   <span className="font-mono text-[10px] text-gray-500">TYPE</span>
+                   <span className="font-mono text-jaia-gold text-xs">{service.stat}</span>
+                </div>
+
+                {/* Corner Decorations */}
+                <div className="absolute top-0 right-0">
+                  <svg width="30" height="30" className="text-white/10 group-hover:text-jaia-gold/30 transition-colors">
+                    <path d="M0 0 L30 0 L30 30" fill="none" stroke="currentColor" strokeWidth="1"/>
+                  </svg>
+                </div>
+                <div className="absolute bottom-0 left-0">
+                  <svg width="30" height="30" className="text-white/10 group-hover:text-jaia-gold/30 transition-colors">
+                    <path d="M0 30 L0 0 L30 0" fill="none" stroke="currentColor" strokeWidth="1"/>
+                  </svg>
+                </div>
+              </div>
+
+            </motion.div>
           ))}
         </div>
       </div>
     </section>
   );
 }
-

@@ -1,21 +1,28 @@
 import { Link } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { ArrowRight, Calendar } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowRight, Calendar, Folder, ChevronRight } from 'lucide-react';
 import { Footer } from '@/components/sections/Footer';
 import { projects } from '@/data/projects';
+import { NeonButton } from '@/components/ui/neon-button';
 
 export function ProjectsPage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-jaia-black">
       {/* Hero Section */}
-      <div className="border-b border-primary/10 bg-gradient-to-br from-yellow-50 via-white to-green-50 dark:from-gray-900 dark:via-background dark:to-green-950">
-        <div className="container mx-auto px-4 py-20">
+      <div className="pt-32 pb-12 relative overflow-hidden border-b border-jaia-gold/20">
+        <div className="absolute inset-0 bg-gradient-to-b from-jaia-gold/5 to-transparent"></div>
+        <div className="absolute inset-0 bg-cyber-grid bg-[size:40px_40px] opacity-10"></div>
+        
+        <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-3xl">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              Our <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Projects</span>
+            <div className="flex items-center gap-2 mb-4">
+              <Folder className="w-4 h-4 text-jaia-gold" />
+              <span className="font-mono text-jaia-gold text-xs tracking-widest">PROJECT_DATABASE</span>
+            </div>
+            <h1 className="text-5xl md:text-6xl font-display font-bold mb-6 text-white">
+              OUR <span className="text-transparent bg-clip-text bg-gradient-to-r from-jaia-gold to-jaia-neonGold">PROJECTS</span>
             </h1>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-xl text-gray-400 font-sans">
               Discover our innovative AI projects designed to solve real-world problems 
               and empower Jamaican communities through technology.
             </p>
@@ -24,62 +31,95 @@ export function ProjectsPage() {
       </div>
 
       {/* Projects Grid */}
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-          {projects.map((project) => (
-            <Card 
-              key={project.id} 
-              className="hover:shadow-lg transition-all hover:-translate-y-1 flex flex-col border-primary/10 hover:border-primary/30"
+          {projects.map((project, idx) => (
+            <motion.div
+              key={project.id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.1 }}
             >
-              <CardHeader>
-                <div className="flex items-start justify-between mb-4">
-                  <span className="text-6xl">{project.icon}</span>
-                  <div className="flex items-center text-sm font-medium text-primary">
-                    <Calendar className="h-4 w-4 mr-1" />
-                    {project.date}
+              <Link to={`/projects/${project.id}`} className="group block h-full">
+                <div 
+                  className="relative h-full bg-jaia-darkGrey/50 border border-white/10 p-8 hover:border-jaia-gold/30 hover:bg-jaia-gold/5 transition-all duration-300"
+                  style={{ clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))" }}
+                >
+                  {/* Header */}
+                  <div className="flex items-start justify-between mb-6">
+                    <span className="text-6xl grayscale group-hover:grayscale-0 transition-all">
+                      {project.icon}
+                    </span>
+                    <div className="flex items-center text-sm font-mono text-jaia-gold">
+                      <Calendar className="h-4 w-4 mr-2" />
+                      {project.date}
+                    </div>
+                  </div>
+                  
+                  {/* Content */}
+                  <h3 className="text-2xl font-display font-bold text-white mb-3 group-hover:text-jaia-gold transition-colors">
+                    {project.title}
+                  </h3>
+                  <p className="text-gray-400 font-sans mb-6">
+                    {project.description}
+                  </p>
+                  
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {project.tags.map(tag => (
+                      <span
+                        key={tag}
+                        className="px-2 py-1 bg-jaia-gold/10 text-jaia-gold border border-jaia-gold/20 text-xs font-mono"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  {/* View Link */}
+                  <div className="flex items-center gap-2 text-jaia-gold font-mono text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span>LEARN_MORE</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </div>
+                  
+                  {/* Corner decorations */}
+                  <div className="absolute top-0 right-0">
+                    <svg width="20" height="20" className="text-white/10 group-hover:text-jaia-gold/30 transition-colors">
+                      <path d="M0 0 L20 0 L20 20" fill="none" stroke="currentColor" strokeWidth="1"/>
+                    </svg>
+                  </div>
+                  <div className="absolute bottom-0 left-0">
+                    <svg width="20" height="20" className="text-white/10 group-hover:text-jaia-gold/30 transition-colors">
+                      <path d="M0 20 L0 0 L20 0" fill="none" stroke="currentColor" strokeWidth="1"/>
+                    </svg>
                   </div>
                 </div>
-                <CardTitle className="text-2xl mb-2">{project.title}</CardTitle>
-                <CardDescription className="text-base">
-                  {project.description}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex-1 flex flex-col justify-end">
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.tags.map(tag => (
-                    <span
-                      key={tag}
-                      className="px-2 py-1 bg-gradient-to-r from-primary/10 to-secondary/10 text-primary border border-primary/20 rounded text-xs font-medium"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <Link to={`/projects/${project.id}`}>
-                  <Button className="w-full">
-                    Learn More
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
+              </Link>
+            </motion.div>
           ))}
         </div>
       </div>
 
       {/* Call to Action */}
-      <div className="border-t border-primary/10 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
-        <div className="container mx-auto px-4 py-16 text-center">
-          <h2 className="text-3xl font-bold mb-4">Want to Collaborate?</h2>
-          <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
+      <div className="border-t border-jaia-green/20 bg-jaia-green/5">
+        <div className="container mx-auto px-6 py-16 text-center">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <span className="w-2 h-2 bg-jaia-gold rounded-full animate-pulse"></span>
+            <span className="font-mono text-jaia-gold text-xs tracking-widest">COLLABORATION_PROTOCOL</span>
+          </div>
+          <h2 className="text-3xl font-display font-bold text-white mb-4">
+            WANT TO <span className="text-jaia-green">COLLABORATE</span>?
+          </h2>
+          <p className="text-gray-400 mb-8 max-w-2xl mx-auto font-sans">
             We're always looking for partners, researchers, and contributors 
             to help us build AI solutions for Jamaica.
           </p>
           <Link to="/#contact">
-            <Button size="lg">
-              Get in Touch
+            <NeonButton variant="primary">
+              INITIALIZE_CONTACT()
               <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+            </NeonButton>
           </Link>
         </div>
       </div>
@@ -88,4 +128,3 @@ export function ProjectsPage() {
     </div>
   );
 }
-

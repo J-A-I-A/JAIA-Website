@@ -1,109 +1,147 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Github, Code2, Users, Lightbulb, BookOpen } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Github, Code2, Users, Lightbulb, BookOpen, ExternalLink } from 'lucide-react';
+import { NeonButton } from '@/components/ui/neon-button';
+
+const features = [
+  {
+    id: "01",
+    icon: <Code2 className="w-6 h-6" />,
+    title: 'EXPLORE_CODE',
+    description: 'Browse our modern React + TypeScript codebase. Built with Vite, Tailwind CSS, and more.',
+  },
+  {
+    id: "02",
+    icon: <Lightbulb className="w-6 h-6" />,
+    title: 'SHARE_IDEAS',
+    description: 'Have suggestions for features or improvements? Open an issue or start a discussion.',
+  },
+  {
+    id: "03",
+    icon: <Users className="w-6 h-6" />,
+    title: 'CONTRIBUTE',
+    description: 'Whether fixing bugs, improving docs, or adding features - all contributions welcome!',
+  },
+  {
+    id: "04",
+    icon: <BookOpen className="w-6 h-6" />,
+    title: 'LEARN_GROW',
+    description: 'Use our codebase as a learning resource. We have guides for beginners.',
+  },
+];
 
 export function OpenSource() {
-  const features = [
-    {
-      icon: Code2,
-      title: 'Explore the Code',
-      description: 'Browse our modern React + TypeScript codebase and see how we build with Vite, Tailwind CSS, and more.',
-    },
-    {
-      icon: Lightbulb,
-      title: 'Share Your Ideas',
-      description: 'Have suggestions for features or improvements? Open an issue or start a discussion on GitHub.',
-    },
-    {
-      icon: Users,
-      title: 'Contribute',
-      description: 'Whether fixing bugs, improving docs, or adding features - all contributions are welcome!',
-    },
-    {
-      icon: BookOpen,
-      title: 'Learn & Grow',
-      description: 'Use our codebase as a learning resource. We have guides for beginners and detailed documentation.',
-    },
-  ];
-
   return (
-    <section id="opensource" className="py-20 bg-gradient-to-br from-green-50/50 via-white to-yellow-50/50 dark:from-gray-900 dark:via-background dark:to-green-950/30 scroll-mt-16">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-sm font-medium mb-4 border border-primary/20">
-            <Github className="h-4 w-4" />
-            Open Source
+    <section id="opensource" className="py-32 bg-jaia-darkGrey relative overflow-hidden scroll-mt-16">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-hex-pattern opacity-10"></div>
+      
+      <div className="container mx-auto px-6 relative z-10">
+        
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-3 border border-jaia-green/30 bg-jaia-green/5 px-6 py-2 mb-6 clip-square">
+            <Github className="w-4 h-4 text-jaia-green" />
+            <span className="font-mono text-jaia-green text-xs tracking-widest">OPEN_SOURCE</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Built in the Open, Together
+          <h2 className="text-4xl md:text-6xl font-display font-bold text-white mb-4">
+            BUILT IN THE <span className="text-jaia-green">OPEN</span>
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
+          <p className="text-gray-400 max-w-2xl mx-auto font-sans">
             This website is fully open source! We believe in transparency and community-driven development. 
             Review our code, suggest improvements, and help us build something amazing for Jamaica's AI community.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {features.map((feature, index) => (
-            <Card key={index} className="hover:shadow-lg transition-shadow border-primary/10 bg-white/50 dark:bg-gray-900/50">
-              <CardHeader>
-                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-secondary text-primary-foreground flex items-center justify-center mb-3">
-                  <feature.icon className="h-6 w-6" />
+        {/* Features Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+          {features.map((feature, idx) => (
+            <motion.div
+              key={feature.id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.1 }}
+              className="group"
+            >
+              <div className="h-full bg-white/5 border border-white/10 p-6 hover:bg-jaia-green/5 hover:border-jaia-green/30 transition-all duration-300">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="p-3 bg-jaia-green/10 border border-jaia-green/30 text-jaia-green group-hover:bg-jaia-green group-hover:text-black transition-colors">
+                    {feature.icon}
+                  </div>
+                  <span className="font-mono text-xs text-gray-600">{feature.id}</span>
                 </div>
-                <CardTitle className="text-lg">{feature.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-sm">{feature.description}</CardDescription>
-              </CardContent>
-            </Card>
+                <h3 className="font-display font-bold text-lg text-white mb-2 group-hover:text-jaia-green transition-colors">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-400 text-sm font-sans">
+                  {feature.description}
+                </p>
+              </div>
+            </motion.div>
           ))}
         </div>
 
-        <div className="max-w-3xl mx-auto">
-          <Card className="bg-gradient-to-br from-primary/5 to-secondary/5 border-primary/20">
-            <CardHeader className="text-center">
-              <CardTitle className="text-2xl">Ready to Contribute?</CardTitle>
-              <CardDescription className="text-base">
-                Check out our GitHub repository to explore the code, report issues, or contribute to the project.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
-                className="text-base px-6"
-                onClick={() => window.open('https://github.com/J-A-I-A/JAIA-Website', '_blank')}
-              >
-                <Github className="mr-2 h-5 w-5" />
-                View on GitHub
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="text-base px-6"
-                onClick={() => window.open('https://github.com/J-A-I-A/JAIA-Website/issues', '_blank')}
-              >
-                <Lightbulb className="mr-2 h-5 w-5" />
-                Share Ideas
-              </Button>
-            </CardContent>
-          </Card>
-
-          <div className="mt-8 text-center">
-            <p className="text-sm text-muted-foreground">
-              <strong>New to coding?</strong> Our repository includes beginner-friendly guides to help you get started. 
-              Check out our <a 
-                href="https://github.com/J-A-I-A/JAIA-Website/blob/main/docs/getting-started.md" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-primary hover:underline"
-              >
-                Getting Started Guide
-              </a> and learn as you contribute!
+        {/* CTA Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="max-w-3xl mx-auto"
+        >
+          <div className="border border-jaia-green/30 bg-jaia-green/5 p-8 md:p-12 text-center">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <span className="w-2 h-2 bg-jaia-gold rounded-full animate-pulse"></span>
+              <span className="font-mono text-jaia-gold text-xs tracking-widest">READY_TO_CONTRIBUTE?</span>
+            </div>
+            
+            <h3 className="text-2xl md:text-3xl font-display font-bold text-white mb-4">
+              Check Out Our Repository
+            </h3>
+            <p className="text-gray-400 mb-8 font-sans">
+              Explore the code, report issues, or contribute to the project. Every contribution helps!
             </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <NeonButton 
+                variant="primary"
+                href="https://github.com/J-A-I-A/JAIA-Website"
+              >
+                <Github className="w-4 h-4 mr-2" />
+                VIEW_GITHUB
+              </NeonButton>
+              <NeonButton 
+                variant="secondary"
+                href="https://github.com/J-A-I-A/JAIA-Website/issues"
+              >
+                <Lightbulb className="w-4 h-4 mr-2" />
+                SHARE_IDEAS
+              </NeonButton>
+            </div>
           </div>
-        </div>
+        </motion.div>
+
+        {/* Beginner Guide */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="mt-8 text-center"
+        >
+          <p className="text-sm text-gray-500 font-mono">
+            <span className="text-jaia-gold">NEW_TO_CODING?</span>{' '}
+            Check out our{' '}
+            <a 
+              href="https://github.com/J-A-I-A/JAIA-Website/blob/main/docs/getting-started.md" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-jaia-green hover:text-jaia-neonGreen transition-colors inline-flex items-center gap-1"
+            >
+              Getting Started Guide
+              <ExternalLink className="w-3 h-3" />
+            </a>
+          </p>
+        </motion.div>
       </div>
     </section>
   );
 }
-

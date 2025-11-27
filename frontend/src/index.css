@@ -31,24 +31,24 @@
   }
 
   .dark {
-    --background: 240 10% 3.9%;
+    --background: 0 0% 1%;
     --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
+    --card: 0 0% 4%;
     --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
+    --popover: 0 0% 4%;
     --popover-foreground: 0 0% 98%;
     --primary: 45 93% 55%;
     --primary-foreground: 240 10% 3.9%;
     --secondary: 153 100% 35%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
+    --muted: 0 0% 10%;
     --muted-foreground: 240 5% 64.9%;
     --accent: 45 95% 65%;
     --accent-foreground: 240 10% 3.9%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
     --ring: 45 93% 55%;
     /* Jamaican-inspired accent colors */
     --jamaican-gold: 45 93% 55%;
@@ -62,10 +62,85 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-jaia-black text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   html {
     scroll-behavior: smooth;
   }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #020202; 
+}
+::-webkit-scrollbar-thumb {
+  background: #009B3A; 
+  border-radius: 0px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #FFD700; 
+}
+
+/* Masking utility */
+.mask-gradient-to-b {
+  mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+}
+
+/* Writing mode utilities */
+.writing-vertical-lr {
+  writing-mode: vertical-lr;
+}
+
+/* Text stroke utility */
+.text-stroke-white {
+  -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+}
+
+/* Rotate utilities */
+.rotate-x-60 {
+  transform: rotateX(60deg);
+}
+
+/* Tech clip paths */
+.clip-tech-left {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+}
+
+.clip-tech-center {
+  clip-path: polygon(20px 0, 100% 0, calc(100% - 20px) 100%, 0 100%);
+}
+
+.clip-tech-right {
+  clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+}
+
+.clip-square {
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+
+.clip-corner {
+  clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px);
+}
+
+.clip-diamond {
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+/* Perspective utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.perspective-3d {
+  transform-style: preserve-3d;
+}
+
+/* Selection styling */
+::selection {
+  background-color: #009B3A;
+  color: black;
 }

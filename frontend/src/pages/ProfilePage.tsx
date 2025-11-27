@@ -6,7 +6,7 @@ import type { Profile, MemberProject } from '../types/profile';
 import { 
   User, MapPin, Briefcase, GraduationCap, Link as LinkIcon, 
   Github, Linkedin, FileText, Mail, Phone, Edit, Sparkles,
-  Building, Users, Calendar, Award
+  Building, Users, Calendar, Award, CreditCard, CheckCircle, AlertCircle
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
@@ -321,6 +321,77 @@ export function ProfilePage() {
                 )}
               </Card>
             )}
+
+            {/* Membership Payment */}
+            <Card className="p-6">
+              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+                <CreditCard size={20} />
+                Membership
+              </h2>
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  {profile.membership_status === 'active' ? (
+                    <CheckCircle size={16} className="text-green-500" />
+                  ) : (
+                    <AlertCircle size={16} className="text-yellow-500" />
+                  )}
+                  <span className={`text-sm font-medium ${
+                    profile.membership_status === 'active' 
+                      ? 'text-green-600 dark:text-green-400'
+                      : 'text-yellow-600 dark:text-yellow-400'
+                  }`}>
+                    {profile.membership_status === 'active' ? 'Active' : 'Pending Payment'}
+                  </span>
+                </div>
+                {profile.membership_expiry_date && (
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Expires: {new Date(profile.membership_expiry_date).toLocaleDateString('en-US', { 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })}
+                  </p>
+                )}
+                <p className="text-xs text-gray-500 dark:text-gray-500">
+                  Annual membership: 100 JMD
+                </p>
+                {profile.membership_status !== 'active' && (
+                  <Button
+                    asChild
+                    className="w-full mt-2"
+                    variant="default"
+                  >
+                    <a
+                      href={`${import.meta.env.VITE_FYGARO_PAYMENT_URL || '#'}?email=${encodeURIComponent(user?.email || '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2"
+                    >
+                      <CreditCard size={16} />
+                      Pay Membership Dues
+                    </a>
+                  </Button>
+                )}
+                {profile.membership_status === 'active' && profile.membership_expiry_date && 
+                  new Date(profile.membership_expiry_date) < new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) && (
+                  <Button
+                    asChild
+                    className="w-full mt-2"
+                    variant="outline"
+                  >
+                    <a
+                      href={`${import.meta.env.VITE_FYGARO_PAYMENT_URL || '#'}?email=${encodeURIComponent(user?.email || '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2"
+                    >
+                      <CreditCard size={16} />
+                      Renew Membership
+                    </a>
+                  </Button>
+                )}
+              </div>
+            </Card>
 
             {/* Career Status */}
             {profile.open_to_opportunities && (
