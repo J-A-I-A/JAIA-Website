@@ -89,7 +89,6 @@ export function Projects() {
           <Link to="/projects">
             <NeonButton variant="secondary">
               VIEW_ALL_PROJECTS
-              <ArrowRight className="w-4 h-4 ml-2" />
             </NeonButton>
           </Link>
         </motion.div>

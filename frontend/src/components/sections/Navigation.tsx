@@ -70,10 +70,10 @@ export function Navigation() {
 
   const navItems = [
     { label: 'HOME', href: '/', isRoute: true },
-    { label: 'PROTOCOLS', href: '/#about', isRoute: false },
     { label: 'SERVICES', href: '/#services', isRoute: false },
     { label: 'PROJECTS', href: '/projects', isRoute: true },
-    { label: 'LOGS', href: '/events', isRoute: true },
+    { label: 'ABOUT', href: '/#about', isRoute: false },
+    { label: 'EVENTS', href: '/events', isRoute: true },
     { label: 'DIRECTORY', href: '/directory', isRoute: true },
     { label: 'CONTACT', href: '/#contact', isRoute: false },
   ];
@@ -176,7 +176,7 @@ export function Navigation() {
             {/* Status Module */}
             <div className="hidden lg:flex pointer-events-auto bg-jaia-black/80 backdrop-blur-xl border-l-4 border-jaia-gold p-3 gap-6 items-center clip-tech-right font-mono text-[10px] text-gray-400">
               <div className="flex flex-col items-end">
-                <span className="text-jaia-gold">{time.toLocaleTimeString([], {hour12: false})}</span>
+                <span className="text-jaia-gold">{time.toLocaleTimeString('en-GB', {hour12: false, timeZone: 'America/Jamaica'})}</span>
                 <span>KINGSTON_NODE</span>
               </div>
               <div className="flex gap-3 text-jaia-green">

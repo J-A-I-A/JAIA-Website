@@ -147,8 +147,8 @@ export function Contact() {
                   href="https://chat.whatsapp.com/FFzjagZ0ZxRCCHaNMjJODm"
                   className="w-full justify-center"
                 >
-                  <img src="/whatsapp-logo.svg" alt="WhatsApp" className="h-5 w-5 mr-2 invert" />
                   JOIN_WHATSAPP
+                  <img src="/whatsapp-logo.svg" alt="WhatsApp" className="h-5 w-5 ml-2" />
                 </NeonButton>
               </div>
             </div>

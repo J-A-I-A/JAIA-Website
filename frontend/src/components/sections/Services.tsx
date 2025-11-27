@@ -92,7 +92,7 @@ export function Services() {
 
                 {/* Footer Stat */}
                 <div className="absolute bottom-0 left-0 w-full p-4 flex justify-between items-center border-t border-white/5 group-hover:border-jaia-gold/20">
-                   <span className="font-mono text-[10px] text-gray-500">TYPE</span>
+                   <span className="font-mono text-[10px] text-gray-500 ml-[25px]">TYPE</span>
                    <span className="font-mono text-jaia-gold text-xs">{service.stat}</span>
                 </div>
 

@@ -40,7 +40,7 @@ export function Hero() {
           className="inline-flex items-center gap-3 border border-jaia-green/30 bg-jaia-green/5 px-6 py-2 rounded-none mb-10 backdrop-blur-sm clip-square"
         >
           <span className="w-2 h-2 bg-jaia-green animate-pulse"></span>
-          <span className="font-mono text-jaia-green text-xs tracking-[0.2em]">JAMAICA AI ASSOCIATION v2.0</span>
+          <span className="font-mono text-jaia-green text-xs tracking-[0.2em]">JAMAICA AI ASSOCIATION</span>
         </motion.div>
 
         {/* Main Title with Glitch Effect */}
@@ -131,7 +131,7 @@ export function Hero() {
       <div className="absolute right-10 top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-4 text-[10px] font-mono text-jaia-gold/40">
         <div className="w-12 h-[1px] bg-jaia-gold/40"></div>
         <span className="text-right">EST. 2024</span>
-        <span className="text-right">v2.0.0</span>
+        <span className="text-right">KINGSTON</span>
         <div className="w-12 h-[1px] bg-jaia-gold/40"></div>
       </div>
     </section>
