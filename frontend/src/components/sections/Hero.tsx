@@ -1,11 +1,7 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { NeonButton } from '@/components/ui/neon-button';
 
 export function Hero() {
-  const { scrollY } = useScroll();
-  const y1 = useTransform(scrollY, [0, 500], [0, 200]);
-  const y2 = useTransform(scrollY, [0, 500], [0, -100]);
-
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-jaia-black perspective-1000">
       
@@ -46,7 +42,6 @@ export function Hero() {
         {/* Main Title with Glitch Effect */}
         <div className="relative mb-8">
           <motion.h1 
-            style={{ y: y2 }}
             className="text-6xl md:text-8xl lg:text-[10rem] font-display font-bold leading-[0.85] tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-gray-200 to-gray-800 mix-blend-screen"
           >
             FUTURE<br />
@@ -61,7 +56,6 @@ export function Hero() {
 
         {/* Subtext */}
         <motion.p 
-          style={{ y: y1 }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 1 }}
