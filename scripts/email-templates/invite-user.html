@@ -1,119 +1,265 @@
+<!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       line-height: 1.6;
-      color: #333;
+      color: #e0e0e0;
       max-width: 600px;
       margin: 0 auto;
       padding: 20px;
+      background-color: #000000;
+    }
+    .container {
+      background-color: #020202;
+      border: 1px solid #009B3A;
     }
     .header {
       text-align: center;
-      padding: 30px 0;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 10px 10px 0 0;
+      padding: 40px 20px 30px;
+      background-color: #0a0a0a;
+      border-bottom: 2px solid #009B3A;
+      position: relative;
+    }
+    .status-bar {
+      display: inline-block;
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: #FFD700;
+      border: 1px solid #FFD700;
+      padding: 6px 16px;
+      margin-bottom: 20px;
+      background-color: rgba(255, 215, 0, 0.05);
+    }
+    .status-indicator {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background-color: #FFD700;
+      margin-right: 8px;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
     }
     .logo {
-      font-size: 32px;
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      font-size: 36px;
       font-weight: bold;
-      color: white;
+      color: #ffffff;
       margin: 0;
+      letter-spacing: 0.1em;
     }
     .tagline {
-      color: rgba(255, 255, 255, 0.9);
-      font-size: 14px;
-      margin-top: 5px;
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      color: #FFD700;
+      font-size: 12px;
+      margin-top: 8px;
+      letter-spacing: 0.2em;
     }
     .content {
-      background: white;
+      background-color: #0a0a0a;
       padding: 40px 30px;
-      border: 1px solid #e0e0e0;
+      color: #e0e0e0;
+    }
+    .content p {
+      margin: 16px 0;
+    }
+    .tech-heading {
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      color: #FFD700;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      margin: 0 0 10px 0;
+      text-transform: uppercase;
+    }
+    h2 {
+      color: #ffffff;
+      margin-top: 0;
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .button-container {
+      text-align: center;
+      margin: 30px 0;
     }
     .button {
       display: inline-block;
-      padding: 14px 32px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white !important;
+      padding: 16px 40px;
+      background-color: #FFD700;
+      color: #000000 !important;
       text-decoration: none;
-      border-radius: 6px;
       font-weight: 600;
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      letter-spacing: 0.05em;
+      border: 2px solid #FFD700;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      font-size: 13px;
+    }
+    .button:hover {
+      background-color: #FFE866;
+      border-color: #FFE866;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    }
+    .alt-link {
+      background-color: rgba(0, 155, 58, 0.1);
+      padding: 16px;
+      border-left: 3px solid #009B3A;
       margin: 20px 0;
+      font-size: 13px;
+      color: #a0a0a0;
+    }
+    .alt-link a {
+      color: #FFD700;
+      word-break: break-all;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+    }
+    .alt-link a:hover {
+      border-bottom-color: #FFD700;
+    }
+    .highlight-box {
+      background-color: rgba(0, 155, 58, 0.05);
+      padding: 20px;
+      border: 1px solid #009B3A;
+      margin: 24px 0;
+    }
+    .features-list {
+      list-style: none;
+      padding: 0;
+      margin: 16px 0;
+    }
+    .features-list li {
+      padding: 10px 0 10px 24px;
+      position: relative;
+      border-left: 2px solid rgba(255, 215, 0, 0.2);
+      margin-left: 10px;
+      margin-bottom: 8px;
+    }
+    .features-list li:before {
+      content: "▸";
+      position: absolute;
+      left: 8px;
+      color: #FFD700;
+      font-weight: bold;
+    }
+    .features-list strong {
+      color: #FFD700;
     }
     .footer {
-      background: #f8f9fa;
-      padding: 20px 30px;
-      border-radius: 0 0 10px 10px;
-      border: 1px solid #e0e0e0;
-      border-top: none;
+      background-color: #000000;
+      padding: 30px;
+      border-top: 1px solid #009B3A;
       text-align: center;
-      font-size: 13px;
-      color: #666;
+      font-size: 12px;
+      color: #666666;
+    }
+    .footer-title {
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      color: #ffffff;
+      font-weight: bold;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+    .footer-location {
+      color: #FFD700;
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      margin: 8px 0;
     }
     .footer a {
-      color: #667eea;
+      color: #009B3A;
       text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s ease;
     }
-    h2 {
-      color: #667eea;
-      margin-top: 0;
+    .footer a:hover {
+      border-bottom-color: #009B3A;
+    }
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, #009B3A, transparent);
+      margin: 20px 0;
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1 class="logo">🧠 JAIA</h1>
-    <p class="tagline">Jamaica Artificial Intelligence Association</p>
-  </div>
-  
-  <div class="content">
-    <h2>You're Invited to Join JAIA! 🎉</h2>
+  <div class="container">
+    <div class="header">
+      <div class="status-bar">
+        <span class="status-indicator"></span>
+        NETWORK INVITATION
+      </div>
+      <h1 class="logo">JAIA</h1>
+      <p class="tagline">&gt; JOIN_THE_NETWORK</p>
+    </div>
     
-    <p>Hi there,</p>
+    <div class="content">
+      <p class="tech-heading">&gt; SYSTEM_MESSAGE: NETWORK_INVITATION</p>
+      <h2>You've Been Invited to Join JAIA</h2>
+      
+      <p>You have received an invitation to join the Jamaica Artificial Intelligence Association network.</p>
+      
+      <div class="highlight-box">
+        <p style="margin-top: 0;"><strong style="color: #FFD700;">MISSION STATEMENT:</strong></p>
+        <p style="margin-bottom: 0;">We're building Jamaica's AI future by bringing together AI enthusiasts, researchers, students, professionals, and organizations to advance artificial intelligence through education, collaboration, and innovation.</p>
+      </div>
+      
+      <p>Accept your invitation to join our growing community:</p>
+      
+      <div class="button-container">
+        <a href="{{ .ConfirmationURL }}" class="button">Accept_Invitation()</a>
+      </div>
+      
+      <div class="alt-link">
+        <strong>ALTERNATIVE ACCESS METHOD:</strong><br>
+        If the button is non-functional, copy this link to your browser:<br>
+        <a href="{{ .ConfirmationURL }}">{{ .ConfirmationURL }}</a>
+      </div>
+      
+      <div class="divider"></div>
+      
+      <p class="tech-heading">&gt; MEMBER_ACCESS_PRIVILEGES</p>
+      <p>As a JAIA network member, you will gain access to:</p>
+      <ul class="features-list">
+        <li><strong>Education:</strong> AI workshops, training sessions, and learning resources</li>
+        <li><strong>Networking:</strong> Connect with Jamaica's AI professionals and researchers</li>
+        <li><strong>Opportunities:</strong> Job board, internships, and project collaborations</li>
+        <li><strong>Projects:</strong> Contribute to impactful AI projects for Jamaica</li>
+        <li><strong>Events:</strong> Exclusive access to conferences, meetups, and gatherings</li>
+        <li><strong>Community:</strong> WhatsApp and Discord community channels</li>
+      </ul>
+      
+      <div class="divider"></div>
+      
+      <p>We're excited to welcome you to our network.</p>
+      
+      <p>
+        <strong style="color: #FFD700;">— THE JAIA NETWORK</strong>
+      </p>
+    </div>
     
-    <p>You've been invited to join the Jamaica Artificial Intelligence Association! We're building Jamaica's AI future, and we'd love for you to be part of our community.</p>
-    
-    <p>JAIA brings together AI enthusiasts, researchers, students, professionals, and organizations to advance artificial intelligence in Jamaica through education, collaboration, and innovation.</p>
-    
-    <p style="text-align: center;">
-      <a href="{{ .ConfirmationURL }}" class="button">Accept Invitation & Join</a>
-    </p>
-    
-    <p style="font-size: 13px; color: #666;">
-      If the button doesn't work, copy and paste this link into your browser:<br>
-      <a href="{{ .ConfirmationURL }}" style="color: #667eea; word-break: break-all;">{{ .ConfirmationURL }}</a>
-    </p>
-    
-    <p><strong>What you'll get as a JAIA member:</strong></p>
-    <ul>
-      <li>🎓 <strong>Education:</strong> Access to AI workshops, training sessions, and learning resources</li>
-      <li>🤝 <strong>Networking:</strong> Connect with Jamaica's AI professionals and researchers</li>
-      <li>💼 <strong>Opportunities:</strong> Job board, internships, and project collaborations</li>
-      <li>🚀 <strong>Projects:</strong> Contribute to impactful AI projects for Jamaica</li>
-      <li>📅 <strong>Events:</strong> Exclusive access to conferences, meetups, and social gatherings</li>
-      <li>💬 <strong>Community:</strong> Join our WhatsApp and Discord communities</li>
-    </ul>
-    
-    <p>We're excited to welcome you to our growing community!</p>
-    
-    <p>
-      Best regards,<br>
-      <strong>The JAIA Team</strong>
-    </p>
-  </div>
-  
-  <div class="footer">
-    <p>
-      <strong>Jamaica Artificial Intelligence Association</strong><br>
-      Kingston, Jamaica<br>
-      <a href="https://jaia-website.fly.dev">jaia-website.fly.dev</a> | 
-      <a href="mailto:admin@jaia.org.jm">admin@jaia.org.jm</a>
-    </p>
-    <p style="margin-top: 15px; font-size: 12px;">
-      Learn more at <a href="https://jaia-website.fly.dev">our website</a>
-    </p>
+    <div class="footer">
+      <p class="footer-title">JAMAICA ARTIFICIAL INTELLIGENCE ASSOCIATION</p>
+      <p class="footer-location">KINGSTON • JAMAICA</p>
+      <p style="margin: 15px 0;">
+        <a href="https://jaia-website.fly.dev">jaia-website.fly.dev</a><br>
+        <a href="mailto:admin@jaia.org.jm">admin@jaia.org.jm</a>
+      </p>
+      <div class="divider"></div>
+      <p style="margin-top: 15px; font-size: 11px;">
+        LEARN MORE:<br>
+        <a href="https://jaia-website.fly.dev">Visit Our Website</a>
+      </p>
+    </div>
   </div>
 </body>
 </html>
-

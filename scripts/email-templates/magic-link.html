@@ -1,128 +1,268 @@
+<!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       line-height: 1.6;
-      color: #333;
+      color: #e0e0e0;
       max-width: 600px;
       margin: 0 auto;
       padding: 20px;
+      background-color: #000000;
+    }
+    .container {
+      background-color: #020202;
+      border: 1px solid #009B3A;
     }
     .header {
       text-align: center;
-      padding: 30px 0;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 10px 10px 0 0;
+      padding: 40px 20px 30px;
+      background-color: #0a0a0a;
+      border-bottom: 2px solid #009B3A;
+      position: relative;
+    }
+    .status-bar {
+      display: inline-block;
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: #009B3A;
+      border: 1px solid #009B3A;
+      padding: 6px 16px;
+      margin-bottom: 20px;
+      background-color: rgba(0, 155, 58, 0.05);
+    }
+    .status-indicator {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background-color: #009B3A;
+      margin-right: 8px;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
     }
     .logo {
-      font-size: 32px;
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      font-size: 36px;
       font-weight: bold;
-      color: white;
+      color: #ffffff;
       margin: 0;
+      letter-spacing: 0.1em;
     }
     .tagline {
-      color: rgba(255, 255, 255, 0.9);
-      font-size: 14px;
-      margin-top: 5px;
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      color: #FFD700;
+      font-size: 12px;
+      margin-top: 8px;
+      letter-spacing: 0.2em;
     }
     .content {
-      background: white;
+      background-color: #0a0a0a;
       padding: 40px 30px;
-      border: 1px solid #e0e0e0;
+      color: #e0e0e0;
+    }
+    .content p {
+      margin: 16px 0;
+    }
+    .tech-heading {
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      color: #FFD700;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      margin: 0 0 10px 0;
+      text-transform: uppercase;
+    }
+    h2 {
+      color: #ffffff;
+      margin-top: 0;
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .button-container {
+      text-align: center;
+      margin: 30px 0;
     }
     .button {
       display: inline-block;
-      padding: 14px 32px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white !important;
+      padding: 16px 40px;
+      background-color: #009B3A;
+      color: #ffffff !important;
       text-decoration: none;
-      border-radius: 6px;
       font-weight: 600;
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      letter-spacing: 0.05em;
+      border: 2px solid #009B3A;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      font-size: 13px;
+    }
+    .button:hover {
+      background-color: #00FF41;
+      border-color: #00FF41;
+      color: #000000 !important;
+      box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+    }
+    .alt-link {
+      background-color: rgba(0, 155, 58, 0.1);
+      padding: 16px;
+      border-left: 3px solid #009B3A;
       margin: 20px 0;
+      font-size: 13px;
+      color: #a0a0a0;
+    }
+    .alt-link a {
+      color: #FFD700;
+      word-break: break-all;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+    }
+    .alt-link a:hover {
+      border-bottom-color: #FFD700;
+    }
+    .info-note {
+      background-color: rgba(0, 155, 58, 0.05);
+      padding: 20px;
+      border-left: 3px solid #009B3A;
+      margin: 24px 0;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+    .info-note strong {
+      color: #FFD700;
+    }
+    .features-list {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0;
+    }
+    .features-list li {
+      padding: 10px 0 10px 24px;
+      position: relative;
+      border-left: 2px solid rgba(0, 155, 58, 0.2);
+      margin-left: 10px;
+      margin-bottom: 8px;
+    }
+    .features-list li:before {
+      content: "▸";
+      position: absolute;
+      left: 8px;
+      color: #009B3A;
+      font-weight: bold;
     }
     .footer {
-      background: #f8f9fa;
-      padding: 20px 30px;
-      border-radius: 0 0 10px 10px;
-      border: 1px solid #e0e0e0;
-      border-top: none;
+      background-color: #000000;
+      padding: 30px;
+      border-top: 1px solid #009B3A;
       text-align: center;
-      font-size: 13px;
-      color: #666;
+      font-size: 12px;
+      color: #666666;
+    }
+    .footer-title {
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      color: #ffffff;
+      font-weight: bold;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+    .footer-location {
+      color: #FFD700;
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      margin: 8px 0;
     }
     .footer a {
-      color: #667eea;
+      color: #009B3A;
       text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s ease;
     }
-    h2 {
-      color: #667eea;
-      margin-top: 0;
+    .footer a:hover {
+      border-bottom-color: #009B3A;
     }
-    .security-note {
-      background: #f8f9fa;
-      padding: 15px;
-      border-radius: 6px;
-      border-left: 4px solid #667eea;
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, #009B3A, transparent);
       margin: 20px 0;
-      font-size: 14px;
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1 class="logo">🧠 JAIA</h1>
-    <p class="tagline">Jamaica Artificial Intelligence Association</p>
-  </div>
-  
-  <div class="content">
-    <h2>Your JAIA Sign-In Link 🔐</h2>
-    
-    <p>Hi there,</p>
-    
-    <p>Someone (hopefully you!) requested to sign in to your JAIA account. Click the button below to securely access your account:</p>
-    
-    <p style="text-align: center;">
-      <a href="{{ .ConfirmationURL }}" class="button">Sign In to JAIA</a>
-    </p>
-    
-    <p style="font-size: 13px; color: #666;">
-      If the button doesn't work, copy and paste this link into your browser:<br>
-      <a href="{{ .ConfirmationURL }}" style="color: #667eea; word-break: break-all;">{{ .ConfirmationURL }}</a>
-    </p>
-    
-    <div class="security-note">
-      <strong>🔒 Security Note:</strong><br>
-      This magic link will expire in 1 hour. If you didn't request this sign-in link, you can safely ignore this email. Your account remains secure.
+  <div class="container">
+    <div class="header">
+      <div class="status-bar">
+        <span class="status-indicator"></span>
+        JAMAICA AI ASSOCIATION
+      </div>
+      <h1 class="logo">JAIA</h1>
+      <p class="tagline">MEMBER LOGIN</p>
     </div>
     
-    <p>After signing in, you'll have access to:</p>
-    <ul>
-      <li>📊 Admin Dashboard (if you're an administrator)</li>
-      <li>👤 Your member profile and settings</li>
-      <li>🎟️ Event registrations and RSVP management</li>
-      <li>💬 Community discussions and networking</li>
-      <li>📧 Personalized AI news and updates</li>
-    </ul>
+    <div class="content">
+      <h2>Sign In to Your JAIA Account</h2>
+      
+      <p>Hello,</p>
+      
+      <p>You requested to sign in to your Jamaica AI Association account. Click the button below to proceed:</p>
+      
+      <div class="button-container">
+        <a href="{{ .ConfirmationURL }}" class="button">Sign In</a>
+      </div>
+      
+      <div class="alt-link">
+        <strong>Or copy and paste this link:</strong><br>
+        <a href="{{ .ConfirmationURL }}">{{ .ConfirmationURL }}</a>
+      </div>
+      
+      <div class="info-note">
+        <strong>Important Information:</strong><br>
+        • This link will expire in 1 hour for your security<br>
+        • If you didn't request this email, you can safely ignore it<br>
+        • Your account password remains unchanged
+      </div>
+      
+      <div class="divider"></div>
+      
+      <p class="tech-heading">MEMBER DASHBOARD</p>
+      <p>After signing in, you can access:</p>
+      <ul class="features-list">
+        <li>Your member profile and account settings</li>
+        <li>Event registrations and RSVP management</li>
+        <li>Admin dashboard (for administrators)</li>
+        <li>Community discussions and updates</li>
+        <li>AI news and educational resources</li>
+      </ul>
+      
+      <div class="divider"></div>
+      
+      <p>Thank you for being part of Jamaica's AI community.</p>
+      
+      <p>
+        <strong style="color: #FFD700;">— The JAIA Team</strong>
+      </p>
+    </div>
     
-    <p>
-      Best regards,<br>
-      <strong>The JAIA Team</strong>
-    </p>
-  </div>
-  
-  <div class="footer">
-    <p>
-      <strong>Jamaica Artificial Intelligence Association</strong><br>
-      Kingston, Jamaica<br>
-      <a href="https://jaia-website.fly.dev">jaia-website.fly.dev</a> | 
-      <a href="mailto:admin@jaia.org.jm">admin@jaia.org.jm</a>
-    </p>
-    <p style="margin-top: 15px; font-size: 12px;">
-      Need help? Contact us via <a href="https://chat.whatsapp.com/FFzjagZ0ZxRCCHaNMjJODm">WhatsApp</a> or 
-      <a href="https://discord.gg/NuVXk7yjNz">Discord</a>
-    </p>
+    <div class="footer">
+      <p class="footer-title">JAMAICA ARTIFICIAL INTELLIGENCE ASSOCIATION</p>
+      <p class="footer-location">KINGSTON • JAMAICA</p>
+      <p style="margin: 15px 0;">
+        <a href="https://jaia-website.fly.dev">jaia-website.fly.dev</a><br>
+        <a href="mailto:admin@jaia.org.jm">admin@jaia.org.jm</a>
+      </p>
+      <div class="divider"></div>
+      <p style="margin-top: 15px; font-size: 11px;">
+        Need help?<br>
+        <a href="https://chat.whatsapp.com/FFzjagZ0ZxRCCHaNMjJODm">WhatsApp</a> • 
+        <a href="https://discord.gg/NuVXk7yjNz">Discord</a>
+      </p>
+    </div>
   </div>
 </body>
 </html>
-

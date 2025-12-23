@@ -524,14 +524,14 @@ export function CommitteeManagement() {
               <div className="grid gap-2">
                 <Label htmlFor="chair_id">Chair</Label>
                 <Select
-                  value={formData.chair_id}
-                  onValueChange={(value) => setFormData({ ...formData, chair_id: value })}
+                  value={formData.chair_id || '__none__'}
+                  onValueChange={(value) => setFormData({ ...formData, chair_id: value === '__none__' ? undefined : value })}
                 >
                   <SelectTrigger id="chair_id">
                     <SelectValue placeholder="Select chair" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">None</SelectItem>
+                    <SelectItem value="__none__">None</SelectItem>
                     {allProfiles.map((profile) => (
                       <SelectItem key={profile.id} value={profile.id}>
                         {profile.full_name || profile.id}
@@ -544,14 +544,14 @@ export function CommitteeManagement() {
               <div className="grid gap-2">
                 <Label htmlFor="co_chair_id">Co-Chair</Label>
                 <Select
-                  value={formData.co_chair_id}
-                  onValueChange={(value) => setFormData({ ...formData, co_chair_id: value })}
+                  value={formData.co_chair_id || '__none__'}
+                  onValueChange={(value) => setFormData({ ...formData, co_chair_id: value === '__none__' ? undefined : value })}
                 >
                   <SelectTrigger id="co_chair_id">
                     <SelectValue placeholder="Select co-chair" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">None</SelectItem>
+                    <SelectItem value="__none__">None</SelectItem>
                     {allProfiles.map((profile) => (
                       <SelectItem key={profile.id} value={profile.id}>
                         {profile.full_name || profile.id}

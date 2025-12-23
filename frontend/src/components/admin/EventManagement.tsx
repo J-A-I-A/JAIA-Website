@@ -139,8 +139,11 @@ export function EventManagement() {
 
     setSaving(true);
     try {
+      // Convert empty strings to null for optional timestamp fields
       const eventData = {
         ...formData,
+        end_date: formData.end_date || null,
+        registration_deadline: formData.registration_deadline || null,
         created_by: user?.id,
         organizer_id: user?.id,
       };
