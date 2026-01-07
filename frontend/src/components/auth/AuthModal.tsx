@@ -28,60 +28,60 @@ export function AuthModal({ isOpen, onClose, defaultMode = 'login' }: AuthModalP
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Backdrop */}
+      {/* Backdrop with Blur */}
       <div
-        className="absolute inset-0 bg-black/50"
+        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
         onClick={onClose}
       />
-      
+
       {/* Modal */}
       <div className="relative z-10 w-full max-w-md mx-4">
         <button
           onClick={onClose}
-          className="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors"
+          className="absolute -top-12 right-0 text-white/50 hover:text-lime transition-colors"
           aria-label="Close"
         >
           <X size={32} />
         </button>
-        
+
         {mode === 'magic' ? (
           <MagicLinkForm
             onSwitchToLogin={() => setMode('login')}
             onSwitchToSignUp={() => setMode('signup')}
           />
         ) : (
-          <div className="w-full max-w-md mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+          <div className="glass-panel rounded-[2rem] border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden">
+            {/* Header Visual */}
+            <div className="h-2 bg-lime w-full" />
+
             {mode === 'login' ? (
-              <div className="p-6">
+              <div className="p-8 md:p-10">
                 <LoginForm
                   onSuccess={handleSuccess}
                   onSwitchToSignUp={() => setMode('signup')}
-                  onSwitchToMagic={() => setMode('magic')}
                 />
               </div>
             ) : (
-              <div className="p-6">
+              <div className="p-8 md:p-10">
                 <SignUpForm
                   onSuccess={handleSuccess}
                   onSwitchToLogin={() => setMode('login')}
-                  onSwitchToMagic={() => setMode('magic')}
                 />
               </div>
             )}
-            
+
             {/* Magic Link Callout - Inside Modal */}
-            <div className="border-t border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 p-4">
+            <div className="bg-white/5 border-t border-white/5 p-6">
               <button
                 onClick={() => setMode('magic')}
                 className="w-full text-center group"
               >
-                <div className="flex items-center justify-center gap-2 text-sm font-medium text-blue-700 dark:text-blue-300 group-hover:text-blue-800 dark:group-hover:text-blue-200 transition-colors">
-                  <Sparkles size={18} className="group-hover:scale-110 transition-transform" />
-                  <span>Try passwordless magic link</span>
-                  <span className="text-xs bg-blue-100 dark:bg-blue-800 px-2 py-0.5 rounded-full">Easiest</span>
+                <div className="flex items-center justify-center gap-2 text-sm font-bold text-lime group-hover:text-white transition-colors uppercase tracking-widest mono">
+                  <Sparkles size={16} className="group-hover:rotate-12 transition-transform" />
+                  <span>Passwordless Access</span>
                 </div>
-                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                  No password needed • Log in with just your email
+                <p className="text-[10px] text-white/40 mt-2 uppercase tracking-tight mono">
+                  Secure Link // No Key Required
                 </p>
               </button>
             </div>

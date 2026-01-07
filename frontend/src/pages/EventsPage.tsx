@@ -1,20 +1,15 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Calendar, MapPin, Video, Users, Clock, ExternalLink, Terminal, ArrowRight } from 'lucide-react';
+import { MapPin, Clock, ArrowRight, Users } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { Event } from '@/types/events';
 import { Footer } from '@/components/sections/Footer';
 
 export function EventsPage() {
-  const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([]);
-  const [pastEvents, setPastEvents] = useState<Event[]>([]);
-  const [showPastEvents, setShowPastEvents] = useState(false);
+  const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedFilter, setSelectedFilter] = useState<'upcoming' | 'past' | 'all'>('upcoming');
 
   useEffect(() => {
     fetchEvents();
@@ -23,30 +18,14 @@ export function EventsPage() {
   const fetchEvents = async () => {
     try {
       setLoading(true);
-      const now = new Date().toISOString();
-
-      // Fetch upcoming events
-      const { data: upcoming, error: upcomingError } = await supabase
+      const { data, error } = await supabase
         .from('events')
         .select('*, organizer:profiles!organizer_id(full_name)')
         .eq('is_published', true)
-        .gte('start_date', now)
         .order('start_date', { ascending: true });
 
-      if (upcomingError) throw upcomingError;
-      setUpcomingEvents(upcoming || []);
-
-      // Fetch past events
-      const { data: past, error: pastError } = await supabase
-        .from('events')
-        .select('*, organizer:profiles!organizer_id(full_name)')
-        .eq('is_published', true)
-        .lt('start_date', now)
-        .order('start_date', { ascending: false })
-        .limit(50);
-
-      if (pastError) throw pastError;
-      setPastEvents(past || []);
+      if (error) throw error;
+      setEvents(data || []);
     } catch (error) {
       console.error('Error fetching events:', error);
     } finally {
@@ -54,319 +33,170 @@ export function EventsPage() {
     }
   };
 
-  const formatEventDate = (startDate: string, endDate: string | null) => {
-    const start = new Date(startDate);
-    const options: Intl.DateTimeFormatOptions = {
-      weekday: 'short',
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
+  const filteredEvents = events.filter(event => {
+    const eventDate = new Date(event.start_date);
+    const now = new Date();
+
+    if (selectedFilter === 'upcoming') return eventDate >= now;
+    if (selectedFilter === 'past') return eventDate < now;
+    return true;
+  });
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return {
+      day: date.getDate(),
+      month: date.toLocaleDateString('en-US', { month: 'short' }),
+      year: date.getFullYear()
+    };
+  };
+
+  const formatTime = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString('en-US', {
       hour: 'numeric',
-      minute: '2-digit'
-    };
-
-    if (endDate) {
-      const end = new Date(endDate);
-      const startStr = start.toLocaleDateString('en-US', options);
-      const endStr = end.toLocaleDateString('en-US', { hour: 'numeric', minute: '2-digit' });
-      return `${startStr} - ${endStr}`;
-    }
-
-    return start.toLocaleDateString('en-US', options);
+      minute: '2-digit',
+      hour12: true
+    });
   };
 
-  const getLocationDisplay = (event: Event) => {
-    if (event.location_type === 'virtual') {
-      return event.meeting_platform || 'Virtual Event';
-    } else if (event.location_type === 'hybrid') {
-      return event.location_name ? `${event.location_name} & Online` : 'Hybrid Event';
-    } else {
-      return event.location_name || event.location_address || 'TBA';
-    }
-  };
-
-  const getLocationIcon = (locationType: string) => {
-    if (locationType === 'virtual' || locationType === 'hybrid') {
-      return <Video className="h-4 w-4 text-jaia-green" />;
-    }
-    return <MapPin className="h-4 w-4 text-jaia-green" />;
-  };
-
-  const getEventTypeColor = (eventType: string) => {
-    const colors: Record<string, string> = {
-      workshop: 'bg-blue-500/10 text-blue-400 border-blue-500/30',
-      meeting: 'bg-jaia-green/10 text-jaia-green border-jaia-green/30',
-      conference: 'bg-purple-500/10 text-purple-400 border-purple-500/30',
-      social: 'bg-orange-500/10 text-orange-400 border-orange-500/30',
-      other: 'bg-gray-500/10 text-gray-400 border-gray-500/30'
-    };
-    return colors[eventType] || colors.other;
-  };
-
-  const EventCard = ({ event, isPast = false }: { event: Event; isPast?: boolean }) => (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="group"
-    >
-      <Card 
-        className={`bg-jaia-darkGrey/50 border-white/10 hover:border-jaia-green/30 transition-all duration-300 flex flex-col h-full ${isPast ? 'opacity-60' : ''}`}
-      >
-        {event.image_url && (
-          <div className="h-48 w-full overflow-hidden relative">
-            <img
-              src={event.image_url}
-              alt={event.title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-jaia-black to-transparent"></div>
-            {isPast && (
-              <div className="absolute top-2 right-2">
-                <Badge className="bg-gray-800 text-gray-300 border-gray-600">Past Event</Badge>
-              </div>
-            )}
-          </div>
-        )}
-        <CardHeader>
-          <div className="flex items-start justify-between gap-2 mb-2">
-            <CardTitle className="text-xl text-white font-display group-hover:text-jaia-green transition-colors">{event.title}</CardTitle>
-            {event.is_featured && !isPast && (
-              <Badge className="shrink-0 bg-jaia-gold/20 text-jaia-gold border-jaia-gold/30">Featured</Badge>
-            )}
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {event.event_type && (
-              <Badge variant="outline" className={`w-fit font-mono text-xs ${getEventTypeColor(event.event_type)}`}>
-                {event.event_type.toUpperCase()}
-              </Badge>
-            )}
-            {event.category && (
-              <Badge variant="outline" className="w-fit bg-white/5 text-gray-400 border-white/10 font-mono text-xs">
-                {event.category}
-              </Badge>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-3 flex-1 flex flex-col">
-          {event.short_description && (
-            <CardDescription className="text-base text-gray-400 line-clamp-3 font-sans">
-              {event.short_description}
-            </CardDescription>
-          )}
-          <div className="space-y-2 mt-auto">
-            <div className="flex items-start gap-2 text-sm">
-              <Calendar className="h-4 w-4 text-jaia-gold shrink-0 mt-0.5" />
-              <span className="text-xs font-mono text-gray-300">{formatEventDate(event.start_date, event.end_date)}</span>
-            </div>
-            <div className="flex items-start gap-2 text-sm text-gray-400">
-              {getLocationIcon(event.location_type)}
-              <span className="text-xs font-mono">{getLocationDisplay(event)}</span>
-            </div>
-            {event.max_attendees && (
-              <div className="flex items-center gap-2 text-sm text-gray-400">
-                <Users className="h-4 w-4" />
-                <span className="text-xs font-mono">Max {event.max_attendees} attendees</span>
-              </div>
-            )}
-            {event.organizer && (
-              <div className="flex items-center gap-2 text-sm text-gray-400">
-                <Users className="h-4 w-4" />
-                <span className="text-xs font-mono">Organized by {event.organizer.full_name}</span>
-              </div>
-            )}
-            {event.registration_deadline && !isPast && (
-              <div className="flex items-center gap-2 text-sm text-gray-400">
-                <Clock className="h-4 w-4" />
-                <span className="text-xs font-mono">
-                  Register by {new Date(event.registration_deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                </span>
-              </div>
-            )}
-          </div>
-          {event.tags && event.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1 pt-2">
-              {event.tags.map((tag, idx) => (
-                <Badge key={idx} variant="outline" className="text-xs bg-white/5 text-gray-500 border-white/10">
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-          )}
-          {event.registration_url && !isPast && (
-            <Button
-              asChild
-              className="w-full mt-4 bg-jaia-green hover:bg-jaia-neonGreen text-jaia-black font-mono"
-            >
-              <a
-                href={event.registration_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2"
-              >
-                REGISTER_NOW
-                <ArrowRight className="h-4 w-4" />
-              </a>
-            </Button>
-          )}
-          {event.meeting_url && !isPast && (
-            <Button
-              asChild
-              className="w-full mt-2"
-              variant="outline"
-            >
-              <a
-                href={event.meeting_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 border-jaia-green/30 text-jaia-green hover:bg-jaia-green/10"
-              >
-                JOIN_MEETING
-                <ExternalLink className="h-4 w-4" />
-              </a>
-            </Button>
-          )}
-          {event.location_url && event.location_type !== 'virtual' && (
-            <Button
-              asChild
-              className="w-full mt-2"
-              variant="outline"
-              size="sm"
-            >
-              <a
-                href={event.location_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 text-xs border-white/20 text-gray-400 hover:bg-white/5"
-              >
-                VIEW_LOCATION
-                <ExternalLink className="h-3 w-3" />
-              </a>
-            </Button>
-          )}
-        </CardContent>
-      </Card>
-    </motion.div>
-  );
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#030303] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-8 h-8 rounded-full border-2 border-lime border-t-transparent animate-spin" />
+          <div className="mono text-xs text-lime uppercase tracking-widest">Loading_Protocol...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen flex flex-col bg-jaia-black">
-      <div className="flex-1">
-        {/* Hero Section */}
-        <div className="pt-32 pb-12 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-jaia-green/5 to-transparent"></div>
-          <div className="absolute inset-0 bg-cyber-grid bg-[size:40px_40px] opacity-10"></div>
-          
-          <div className="container mx-auto px-6 relative z-10">
-            <div className="flex items-center gap-4 mb-8">
-              <div className="bg-jaia-green/10 p-3 border border-jaia-green/30">
-                <Terminal className="text-jaia-green w-6 h-6" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="w-2 h-2 bg-jaia-gold rounded-full animate-pulse"></span>
-                  <span className="font-mono text-jaia-gold text-xs tracking-widest">EVENT_LOGS</span>
-                </div>
-                <h1 className="text-4xl md:text-5xl font-display font-bold text-white">
-                  EVENTS & <span className="text-jaia-green">WORKSHOPS</span>
-                </h1>
-              </div>
-            </div>
-            
-            <p className="text-lg text-gray-400 max-w-2xl font-sans mb-8">
-              Join us at our upcoming events, workshops, and community gatherings. 
-              Connect with fellow AI enthusiasts and expand your knowledge.
-            </p>
+    <div className="min-h-screen bg-charcoal text-white relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-noise opacity-[0.03]" />
+        <div className="absolute inset-0 bg-grid-white/[0.02]" />
+      </div>
 
-            <div className="flex items-center space-x-3 bg-white/5 border border-white/10 px-4 py-3 w-fit">
-              <Label htmlFor="past-events" className="text-sm font-mono cursor-pointer text-gray-400">
-                SHOW_PAST_EVENTS
-              </Label>
-              <Switch
-                id="past-events"
-                checked={showPastEvents}
-                onCheckedChange={setShowPastEvents}
-                className="data-[state=checked]:bg-jaia-green"
-              />
+      <div className="relative z-10 pt-28 pb-12 px-6">
+        <div className="container mx-auto max-w-6xl">
+
+          {/* Header */}
+          <div className="mb-12 flex flex-col md:flex-row items-end justify-between gap-6">
+            <div>
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-8 h-[1px] bg-lime" />
+                <span className="mono text-[10px] font-bold uppercase tracking-[0.3em] text-lime">Active_Transmissions</span>
+              </div>
+              <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-2">
+                EVENT<br />PROTOCOL
+              </h1>
+            </div>
+
+            {/* Filter Tabs */}
+            <div className="flex gap-1 p-1 glass-panel rounded-full border-white/5">
+              {(['upcoming', 'past', 'all'] as const).map((filter) => (
+                <button
+                  key={filter}
+                  onClick={() => setSelectedFilter(filter)}
+                  className={`px-5 py-2 rounded-full font-bold text-[10px] uppercase tracking-widest transition-all ${selectedFilter === filter
+                    ? 'bg-lime text-black shadow-[0_0_15px_rgba(204,255,0,0.15)]'
+                    : 'text-white/40 hover:text-white hover:bg-white/5'
+                    }`}
+                >
+                  {filter}
+                </button>
+              ))}
             </div>
           </div>
-        </div>
 
-        <div className="container mx-auto px-6 py-12">
-          {loading ? (
-            <div className="flex items-center gap-2 text-jaia-gold font-mono text-sm animate-pulse py-20 justify-center">
-              <span>&gt; FETCHING_EVENT_DATA</span>
-              <span className="inline-block w-2 h-4 bg-jaia-gold"></span>
-            </div>
-          ) : (
-            <>
-              {/* Upcoming Events Section */}
-              <div className="mb-16">
-                <div className="flex items-center justify-between mb-8 border-b border-jaia-green/20 pb-4">
-                  <h2 className="text-2xl font-display font-bold text-white">
-                    UPCOMING_<span className="text-jaia-green">EVENTS</span>
-                  </h2>
-                  <Badge className="bg-jaia-green/10 text-jaia-green border-jaia-green/30 font-mono">
-                    {upcomingEvents.length} {upcomingEvents.length === 1 ? 'Event' : 'Events'}
-                  </Badge>
-                </div>
-
-                {upcomingEvents.length === 0 ? (
-                  <div className="text-center max-w-2xl mx-auto">
-                    <div className="bg-white/5 border border-white/10 p-12">
-                      <Calendar className="h-16 w-16 mx-auto mb-4 text-gray-600" />
-                      <h3 className="text-xl font-display font-bold text-white mb-2">No Upcoming Events</h3>
-                      <p className="text-gray-400 mb-4 font-sans">
-                        We're currently planning our next events. Check back soon for exciting workshops,
-                        meetups, and tech talks!
-                      </p>
-                      <p className="text-sm text-gray-500 font-mono">
-                        &gt; STATUS: AWAITING_NEW_EVENTS
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {upcomingEvents.map((event) => (
-                      <EventCard key={event.id} event={event} />
-                    ))}
-                  </div>
-                )}
+          {/* Events List */}
+          <div className="space-y-3">
+            {filteredEvents.length === 0 ? (
+              <div className="glass-panel p-12 rounded-[1.5rem] text-center border-white/5">
+                <p className="text-white/30 text-lg font-bold uppercase tracking-widest">No signals detected.</p>
               </div>
+            ) : (
+              filteredEvents.map((event, idx) => {
+                const dateInfo = formatDate(event.start_date);
+                const timeStr = formatTime(event.start_date);
 
-              {/* Past Events Section */}
-              {showPastEvents && (
-                <div className="border-t border-white/10 pt-12">
-                  <div className="flex items-center justify-between mb-8 border-b border-gray-800 pb-4">
-                    <h2 className="text-2xl font-display font-bold text-white">
-                      PAST_<span className="text-gray-500">EVENTS</span>
-                    </h2>
-                    <Badge className="bg-gray-800 text-gray-400 border-gray-700 font-mono">
-                      {pastEvents.length} {pastEvents.length === 1 ? 'Event' : 'Events'}
-                    </Badge>
-                  </div>
+                return (
+                  <motion.div
+                    key={event.id}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                    className="group relative"
+                  >
+                    <div className="glass-panel p-6 md:p-8 rounded-[1.5rem] border-white/5 hover:border-lime/30 transition-all duration-300 overflow-hidden relative">
+                      {/* Hover Gradient */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-lime/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-                  {pastEvents.length === 0 ? (
-                    <div className="text-center max-w-2xl mx-auto">
-                      <div className="bg-white/5 border border-white/10 p-12">
-                        <Calendar className="h-16 w-16 mx-auto mb-4 text-gray-600" />
-                        <h3 className="text-xl font-display font-bold text-white mb-2">No Past Events</h3>
-                        <p className="text-gray-400 font-sans">
-                          We haven't hosted any events yet, but we're excited to start soon!
-                        </p>
+                      <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10 relative z-10">
+                        {/* Date */}
+                        <div className="flex flex-col items-center shrink-0">
+                          <span className="text-3xl md:text-5xl font-black text-transparent text-stroke-white group-hover:text-lime group-hover:text-stroke-0 transition-colors duration-300">
+                            {dateInfo.day}
+                          </span>
+                          <span className="mono text-[10px] font-bold uppercase tracking-[0.3em] text-white/40">
+                            {dateInfo.month}
+                          </span>
+                        </div>
+
+                        {/* Content */}
+                        <div className="flex-1 text-center md:text-left">
+                          {event.organizer && (
+                            <div className="mono text-[10px] text-lime uppercase tracking-widest mb-2">
+                              Transmission_By: {event.organizer.full_name}
+                            </div>
+                          )}
+                          <h3 className="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-6 group-hover:text-lime transition-colors">
+                            {event.title}
+                          </h3>
+
+                          <div className="flex flex-wrap justify-center md:justify-start gap-8 mono text-[10px] font-bold uppercase tracking-widest text-white/40">
+                            <span className="flex items-center gap-2">
+                              <MapPin size={14} className="text-lime" />
+                              {/* TODO: Add location field to DB or assume Kingston for now if missing */}
+                              Kingston_HQ
+                            </span>
+                            <span className="flex items-center gap-2">
+                              <Clock size={14} className="text-lime" />
+                              {timeStr}
+                            </span>
+                            {event.max_attendees && (
+                              <span className="flex items-center gap-2">
+                                <Users size={14} className="text-lime" />
+                                {event.max_attendees} slots
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Description on Expand (Optional) or just always show brief */}
+                          {event.description && (
+                            <p className="mt-6 text-white/50 text-lg leading-relaxed max-w-2xl line-clamp-2 group-hover:text-white/70 transition-colors">
+                              {event.description}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Action */}
+                        <div className="shrink-0">
+                          <Button
+                            className="w-16 h-16 rounded-full bg-white/5 hover:bg-lime hover:text-black border border-white/10 flex items-center justify-center transition-all group/btn"
+                          >
+                            <ArrowRight className="w-6 h-6 group-hover/btn:-rotate-45 transition-transform" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                  ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {pastEvents.map((event) => (
-                        <EventCard key={event.id} event={event} isPast />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-            </>
-          )}
+                  </motion.div>
+                );
+              })
+            )}
+          </div>
         </div>
       </div>
       <Footer />

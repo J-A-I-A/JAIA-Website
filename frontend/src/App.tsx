@@ -8,6 +8,7 @@ import { ProjectTemplate } from '@/pages/ProjectTemplate';
 import { ProfileEditPage } from '@/pages/ProfileEditPage';
 import { DirectoryPage } from '@/pages/DirectoryPage';
 import { EventsPage } from '@/pages/EventsPage';
+import { CommitteesPage } from '@/pages/CommitteesPage';
 
 const AdminPage = lazy(() => import('@/pages/AdminPage').then(module => ({ default: module.AdminPage })));
 
@@ -15,6 +16,7 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
+      <div className="noise-overlay" />
       <div className="min-h-screen">
         <Navigation />
         <Routes>
@@ -23,6 +25,7 @@ function App() {
           <Route path="/projects/:projectId" element={<ProjectTemplate />} />
           <Route path="/events" element={<EventsPage />} />
           <Route path="/directory" element={<DirectoryPage />} />
+          <Route path="/committees" element={<CommitteesPage />} />
           <Route path="/profile" element={<Navigate to="/profile/edit" replace />} />
           <Route path="/profile/edit" element={<ProfileEditPage />} />
           <Route path="/admin" element={
