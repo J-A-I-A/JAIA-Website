@@ -46,7 +46,7 @@ export function Services() {
       {/* Background: Organic Curly SVGs (Restored) */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Large Swirling Curve Top-Right */}
-        <motion.div style={{ y: y1 }} className="absolute -top-[10%] -right-[10%] w-[800px] h-[800px] opacity-10 text-lime blur-[60px]">
+        <motion.div style={{ y: y1 }} className="absolute -top-[10%] -right-[10%] w-[500px] md:w-[800px] h-[500px] md:h-[800px] opacity-10 text-lime blur-[60px]">
           <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
             <path fill="#ccff00" d="M44.7,-76.4C58.9,-69.2,71.8,-59.1,79.6,-46.3C87.4,-33.5,90.1,-18,89,-2.9C87.9,12.3,83,27,74.2,39.8C65.4,52.6,52.7,63.4,39,70.8C25.3,78.2,10.6,82.2,-2.7,86.8C-16,91.5,-27.9,96.8,-40,92.5C-52.1,88.2,-64.4,74.3,-72.7,60.1C-81,45.8,-85.3,31.2,-86.3,16.3C-87.3,1.4,-85,-13.8,-77.8,-27.3C-70.6,-40.8,-58.5,-52.6,-45.5,-60.4C-32.5,-68.2,-18.6,-72,-4.2,-64.7C10.2,-57.5,30.5,-83.6,44.7,-76.4Z" transform="translate(100 100)" />
           </svg>
@@ -73,9 +73,9 @@ export function Services() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-7xl md:text-9xl font-black uppercase tracking-tighter leading-[0.8] mb-6">
+            <h2 className="text-5xl md:text-9xl font-black uppercase tracking-tighter leading-[0.8] mb-6">
               FLUID<br />
-              <span className="text-transparent text-stroke-white">INTELLIGENCE</span>
+              <span className="text-transparent text-stroke-white text-4xl md:text-9xl">INTELLIGENCE</span>
             </h2>
 
             {/* Decorative Curly Underline (Restored) */}
@@ -90,8 +90,9 @@ export function Services() {
         {/* Services Grid/Timeline */}
         <div className="relative">
           {/* Central Connecting Neuron Path (SVG) - Curved Line Restored */}
-          <div className="absolute left-0 top-0 w-full h-full hidden md:block pointer-events-none">
+          <div className="absolute left-0 top-0 w-full h-full block pointer-events-none opacity-50 md:opacity-100 mix-blend-screen">
             <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+              {/* Desktop Wide Curve */}
               <path
                 d="M50 0 C 50 20, 30 30, 30 50 C 30 70, 70 80, 70 100"
                 vectorEffect="non-scaling-stroke"
@@ -99,7 +100,17 @@ export function Services() {
                 strokeWidth="2"
                 fill="none"
                 strokeDasharray="4 4"
-                className="opacity-50"
+                className="opacity-50 hidden md:block"
+              />
+              {/* Mobile Narrow Wave */}
+              <path
+                d="M50 0 C 50 20, 35 40, 50 60 C 65 80, 50 80, 50 100"
+                vectorEffect="non-scaling-stroke"
+                stroke="url(#path-gradient)"
+                strokeWidth="2"
+                fill="none"
+                strokeDasharray="4 4"
+                className="opacity-40 md:hidden"
               />
               <defs>
                 <linearGradient id="path-gradient" x1="0" y1="0" x2="0" y2="1">

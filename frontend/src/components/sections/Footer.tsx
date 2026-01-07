@@ -10,9 +10,7 @@ export function Footer() {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12">
         <div className="max-w-md">
           <div className="flex items-center gap-2 mb-6">
-            <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-              <span className="text-black font-black text-sm">J</span>
-            </div>
+            <img src="/jaia-logo.png" alt="JAIA" className="w-10 h-10 object-contain brightness-0 invert" />
             <span className="text-xl font-bold tracking-tighter uppercase">JAIA</span>
           </div>
           <p className="text-white/40 mb-8 leading-relaxed">

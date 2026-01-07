@@ -6,8 +6,8 @@ import { useAuth } from '../contexts/AuthContext';
 import type { Profile } from '../types/profile';
 import {
   User, MapPin, Search, Filter, Award,
-  ExternalLink, Linkedin, Github, Sparkles,
-  Edit, Eye, EyeOff, CheckCircle2, AlertCircle, Users, Loader2
+  ExternalLink, Linkedin, Github,
+  Edit, Eye, EyeOff, CheckCircle2, AlertCircle, Loader2
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -347,7 +347,7 @@ export function DirectoryPage() {
                 >
                   <div className="glass-panel p-6 bg-white/5 hover:bg-white/[0.07] border-white/5 hover:border-lime/30 transition-all duration-300 rounded-[1.5rem] group h-full flex flex-col relative overflow-hidden">
                     {/* Hover Gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-lime/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-lime/5 via-transparent to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
                     <div className="relative z-10 flex flex-col h-full">
                       <div className="flex items-start gap-4 mb-4">

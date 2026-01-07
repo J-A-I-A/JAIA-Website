@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, ArrowUpRight, Zap, LogOut, User, Shield } from 'lucide-react';
+import { Menu, X, ArrowUpRight, LogOut, User, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { AuthModal } from '../auth/AuthModal';
@@ -76,11 +76,13 @@ export function Navigation() {
   return (
     <>
       <nav className="fixed top-0 left-0 w-full z-[100] px-6 py-8 pointer-events-none">
-        <div className="max-w-screen-2xl mx-auto flex items-center justify-between pointer-events-auto">
+        <div className="relative z-[101] max-w-screen-2xl mx-auto flex items-center justify-between pointer-events-auto">
           <Link to="/" className="flex items-center gap-4 cursor-pointer group">
-            <div className="w-10 h-10 bg-lime rounded-lg flex items-center justify-center -rotate-12 group-hover:rotate-0 transition-transform duration-500">
-              <Zap size={20} className="text-black" />
-            </div>
+            <img
+              src="/jaia-logo.png"
+              alt="JAIA Logo"
+              className="w-12 h-12 object-contain brightness-0 invert group-hover:scale-105 transition-transform duration-500"
+            />
             <span className="text-xl font-black tracking-tighter uppercase text-white hidden sm:block">JAIA</span>
           </Link>
 

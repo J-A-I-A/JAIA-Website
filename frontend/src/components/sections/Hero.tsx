@@ -22,7 +22,7 @@ export function Hero() {
   }, []);
 
   return (
-    <section className="relative min-h-[100vh] flex flex-col items-center justify-center pt-32 pb-40 px-6 overflow-hidden">
+    <section className="relative min-h-[100vh] flex flex-col items-center justify-center pt-20 md:pt-32 pb-40 px-6 overflow-hidden">
 
       {/* LEFT SIDEBAR: NEURAL ENGINE LOGS */}
       <div className="absolute left-0 top-0 bottom-0 w-32 border-r border-white/5 hidden xl:flex flex-col items-center py-24 z-20 bg-black/40 backdrop-blur-xl">
@@ -132,11 +132,31 @@ export function Hero() {
           y: [0, -50, 0],
         }}
         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-        className="absolute top-[10%] right-[10%] w-[500px] h-[500px] bg-lime/[0.03] rounded-full blur-[120px] pointer-events-none"
+        className="absolute top-[10%] right-[10%] w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-lime/10 md:bg-lime/[0.03] rounded-full blur-[80px] md:blur-[120px] pointer-events-none"
       />
 
+      {/* MOBILE ONLY: Tech Background Overlay */}
+      <div className="absolute inset-0 z-0 xl:hidden pointer-events-none overflow-hidden">
+        {/* Scanning Line Animation */}
+        <motion.div
+          animate={{ top: ['0%', '100%'] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+          className="absolute left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-lime/50 to-transparent shadow-[0_0_15px_#ccff00] opacity-50"
+        />
+
+        {/* Faint Grid Lines */}
+        <div className="absolute top-0 left-4 bottom-0 w-[1px] bg-white/[0.1]" />
+        <div className="absolute top-0 right-4 bottom-0 w-[1px] bg-white/[0.1]" />
+
+        {/* Bottom Tech Indicators */}
+        <div className="absolute bottom-32 right-6 opacity-60 flex flex-col items-end gap-1">
+          <div className="w-16 h-[1px] bg-lime/50" />
+          <span className="mono text-[10px] text-white/50">SYS_READY</span>
+        </div>
+      </div>
+
       {/* HUD Layout Frame */}
-      <div className="absolute inset-0 pointer-events-none border-[1px] border-white/[0.03] m-8 md:m-16 rounded-[4rem]" />
+      <div className="absolute inset-0 pointer-events-none border-[1px] border-white/[0.03] m-4 md:m-16 rounded-[2rem] md:rounded-[4rem]" />
 
       <motion.div
         style={{ y: y1, opacity }}
@@ -144,12 +164,19 @@ export function Hero() {
       >
         <div className="flex flex-col items-center text-center">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="mb-12 mono text-[10px] tracking-[0.8em] text-lime uppercase font-bold px-8 py-3 glass-card rounded-full flex items-center gap-3 border-lime/10"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-12 flex items-center gap-6"
           >
-            <div className="w-2 h-2 rounded-full bg-lime animate-ping" />
-            Neural Protocol v4.0 Active
+            <div className="h-px w-12 bg-lime/20" />
+            <div className="mono text-[10px] text-lime/60 font-bold tracking-[0.3em] uppercase flex items-center gap-3">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-lime opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-lime"></span>
+              </span>
+              System_Online
+            </div>
+            <div className="h-px w-12 bg-lime/20" />
           </motion.div>
 
           <div className="relative mb-20">
@@ -186,7 +213,7 @@ export function Hero() {
           >
             <div className="flex items-center gap-8 group">
               <div className="w-px h-24 bg-gradient-to-b from-transparent via-lime/20 to-transparent hidden md:block" />
-              <p className="text-2xl md:text-3xl text-white/40 leading-[1.1] font-medium max-w-md text-center md:text-left italic group-hover:text-white/60 transition-colors">
+              <p className="text-base md:text-3xl text-white/40 leading-[1.1] font-medium max-w-md text-center md:text-left italic group-hover:text-white/60 transition-colors px-6 md:px-0">
                 "Empowering Jamaica through Artificial Intelligence."
               </p>
             </div>
@@ -194,7 +221,7 @@ export function Hero() {
             <div className="flex flex-col items-center gap-6">
               <motion.button
                 whileHover={{ scale: 1.05 }}
-                className="relative px-16 py-8 bg-lime text-black font-black rounded-full text-2xl uppercase tracking-tighter overflow-hidden group shadow-[0_0_80px_rgba(204,255,0,0.15)]"
+                className="relative px-8 py-4 md:px-16 md:py-8 bg-lime text-black font-black rounded-full text-sm md:text-2xl uppercase tracking-tighter overflow-hidden group shadow-[0_0_40px_rgba(204,255,0,0.15)]"
               >
                 <span className="relative z-10">Join the Community</span>
                 <div className="absolute inset-0 bg-white -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />

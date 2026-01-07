@@ -48,27 +48,27 @@ const team = [
 
 export function Team() {
   return (
-    <section id="team" className="py-40 px-6 max-w-7xl mx-auto relative overflow-hidden">
+    <section id="team" className="py-24 md:py-40 px-6 max-w-7xl mx-auto relative overflow-hidden">
 
       {/* Section Header */}
-      <div className="flex flex-col md:flex-row items-end justify-between mb-24 gap-8">
+      <div className="flex flex-col md:flex-row items-start md:items-end justify-between mb-8 md:mb-24 gap-4 md:gap-8">
         <div>
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-12 h-[1px] bg-lime" />
-            <span className="mono text-[10px] font-black uppercase tracking-[0.5em] text-lime">Core_Operators</span>
+          <div className="flex items-center gap-3 mb-3 md:mb-6">
+            <div className="w-8 md:w-12 h-[1px] bg-lime" />
+            <span className="mono text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em] md:tracking-[0.5em] text-lime">Core_Operators</span>
           </div>
-          <h2 className="text-7xl md:text-8xl font-black uppercase tracking-tighter leading-none">
+          <h2 className="text-4xl md:text-8xl font-black uppercase tracking-tighter leading-[0.85]">
             THE<br />UNIT
           </h2>
         </div>
-        <p className="text-xl text-white/40 max-w-md font-medium text-right mono">
+        <p className="text-xs md:text-xl text-white/40 max-w-md font-medium text-left md:text-right mono">
           [ ACTIVE_NODES: {team.length} ]<br />
           Dedicated leadership driving the Caribbean AI revolution.
         </p>
       </div>
 
       {/* Team Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 max-w-sm md:max-w-none mx-auto">
         {team.map((member, idx) => (
           <motion.div
             key={member.code}
@@ -77,15 +77,15 @@ export function Team() {
             viewport={{ once: true }}
             transition={{ delay: idx * 0.1 }}
             whileHover={{ y: -10 }}
-            className="group glass-panel p-8 rounded-[3rem] border-white/5 hover:border-lime/30 transition-all relative overflow-hidden"
+            className="group glass-panel p-4 md:p-8 rounded-[1.5rem] md:rounded-[3rem] border-white/5 hover:border-lime/30 transition-all relative overflow-hidden"
           >
             {/* ID Badge */}
-            <div className="absolute top-8 right-8 mono text-[10px] font-bold text-white/20 group-hover:text-lime transition-colors">
+            <div className="absolute top-4 md:top-8 right-4 md:right-8 mono text-[9px] md:text-[10px] font-bold text-white/20 group-hover:text-lime transition-colors">
               {member.code}
             </div>
 
             {/* Photo */}
-            <div className="relative mx-auto mb-8 w-40 h-40">
+            <div className="relative mx-auto mb-4 md:mb-8 w-24 h-24 md:w-40 md:h-40">
               <div className="w-full h-full rounded-full bg-black border border-white/10 group-hover:border-lime/50 overflow-hidden transition-all p-1">
                 <div className="w-full h-full rounded-full overflow-hidden bg-white/5 relative">
                   <img
@@ -120,10 +120,10 @@ export function Team() {
 
             {/* Info */}
             <div className="text-center">
-              <h3 className="font-black text-2xl text-white uppercase tracking-tighter mb-2 group-hover:text-lime transition-colors">
+              <h3 className="font-black text-lg md:text-2xl text-white uppercase tracking-tighter mb-1 md:mb-2 group-hover:text-lime transition-colors">
                 {member.name}
               </h3>
-              <p className="mono text-[10px] text-white/40 uppercase tracking-widest font-bold">
+              <p className="mono text-[9px] md:text-[10px] text-white/40 uppercase tracking-widest font-bold">
                 {member.role}
               </p>
             </div>

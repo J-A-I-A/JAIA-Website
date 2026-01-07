@@ -132,12 +132,12 @@ export function EventsPage() {
                   >
                     <div className="glass-panel p-6 md:p-8 rounded-[1.5rem] border-white/5 hover:border-lime/30 transition-all duration-300 overflow-hidden relative">
                       {/* Hover Gradient */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-lime/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-lime/5 via-transparent to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
                       <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10 relative z-10">
                         {/* Date */}
                         <div className="flex flex-col items-center shrink-0">
-                          <span className="text-3xl md:text-5xl font-black text-transparent text-stroke-white group-hover:text-lime group-hover:text-stroke-0 transition-colors duration-300">
+                          <span className="text-2xl md:text-4xl font-black text-transparent text-stroke-white group-hover:text-lime group-hover:text-stroke-0 transition-colors duration-300">
                             {dateInfo.day}
                           </span>
                           <span className="mono text-[10px] font-bold uppercase tracking-[0.3em] text-white/40">
@@ -152,11 +152,11 @@ export function EventsPage() {
                               Transmission_By: {event.organizer.full_name}
                             </div>
                           )}
-                          <h3 className="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-6 group-hover:text-lime transition-colors">
+                          <h3 className="text-xl md:text-3xl font-black uppercase tracking-tighter mb-3 group-hover:text-lime transition-colors">
                             {event.title}
                           </h3>
 
-                          <div className="flex flex-wrap justify-center md:justify-start gap-8 mono text-[10px] font-bold uppercase tracking-widest text-white/40">
+                          <div className="flex flex-wrap justify-center md:justify-start gap-6 mono text-[10px] font-bold uppercase tracking-widest text-white/40">
                             <span className="flex items-center gap-2">
                               <MapPin size={14} className="text-lime" />
                               {/* TODO: Add location field to DB or assume Kingston for now if missing */}
@@ -176,7 +176,7 @@ export function EventsPage() {
 
                           {/* Description on Expand (Optional) or just always show brief */}
                           {event.description && (
-                            <p className="mt-6 text-white/50 text-lg leading-relaxed max-w-2xl line-clamp-2 group-hover:text-white/70 transition-colors">
+                            <p className="mt-4 text-white/50 text-sm leading-relaxed max-w-2xl line-clamp-2 group-hover:text-white/70 transition-colors">
                               {event.description}
                             </p>
                           )}

@@ -36,7 +36,7 @@
   * {
     @apply border-border;
   }
-  
+
   body {
     font-family: 'Inter', sans-serif;
     background-color: #030303;
@@ -45,11 +45,11 @@
     cursor: crosshair;
     @apply bg-grid;
   }
-  
+
   html {
     scroll-behavior: smooth;
   }
-  
+
   .mono {
     font-family: 'JetBrains Mono', monospace;
   }
@@ -58,7 +58,7 @@
 /* High-end Grid System */
 .bg-grid {
   background-size: 80px 80px;
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
 }
@@ -75,15 +75,15 @@
 
 /* Glass Effects */
 .glass-panel {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.005) 100%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
   backdrop-filter: blur(40px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .glass-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.005) 100%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
   backdrop-filter: blur(40px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .hover-glow:hover {
@@ -110,8 +110,13 @@
 }
 
 @keyframes scan {
-  0% { top: 0%; }
-  100% { top: 100%; }
+  0% {
+    top: 0%;
+  }
+
+  100% {
+    top: 100%;
+  }
 }
 
 /* Vertical Text */
@@ -154,8 +159,14 @@
 }
 
 /* Text stroke utility */
-.text-stroke-white {
-  -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+@layer utilities {
+  .text-stroke-white {
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+  }
+
+  .text-stroke-0 {
+    -webkit-text-stroke: 0;
+  }
 }
 
 /* Rotate utilities */
@@ -199,16 +210,31 @@
 
 /* Cyber Grid Background */
 .bg-cyber-grid {
-  background-image: 
+  background-image:
     linear-gradient(rgba(204, 255, 0, 0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(204, 255, 0, 0.03) 1px, transparent 1px);
 }
 
 /* Glitch Animation */
 @keyframes glitch {
-  0%, 90%, 100% { opacity: 0; }
-  92%, 98% { opacity: 0.7; transform: translate(2px, 1px); }
-  94%, 96% { opacity: 0.7; transform: translate(-2px, -1px); }
+
+  0%,
+  90%,
+  100% {
+    opacity: 0;
+  }
+
+  92%,
+  98% {
+    opacity: 0.7;
+    transform: translate(2px, 1px);
+  }
+
+  94%,
+  96% {
+    opacity: 0.7;
+    transform: translate(-2px, -1px);
+  }
 }
 
 .animate-glitch {

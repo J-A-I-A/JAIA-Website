@@ -214,7 +214,7 @@ export function CommitteesPage() {
                                 >
                                     <div className="glass-panel p-6 md:p-8 rounded-[1.5rem] border-white/5 hover:border-lime/30 transition-all duration-500 overflow-hidden relative">
                                         {/* Hover Gradient */}
-                                        <div className="absolute inset-0 bg-gradient-to-r from-lime/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                                        <div className="absolute inset-0 bg-gradient-to-r from-lime/5 via-transparent to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
                                         <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10 relative z-10">
                                             {/* Icon Identifier */}

@@ -43,7 +43,7 @@ export function ProjectsPage() {
                 <Link to={`/projects/${project.id}`} className="block h-full group">
                   <div className="h-full glass-panel p-6 md:p-8 rounded-[1.5rem] border-white/5 hover:border-lime/30 transition-all duration-300 relative overflow-hidden">
                     {/* Hover Gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-lime/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-lime/5 via-transparent to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
                     {/* Corner Marker */}
                     <div className="absolute top-6 right-6 mono text-[10px] text-white/20 group-hover:text-lime transition-colors">
