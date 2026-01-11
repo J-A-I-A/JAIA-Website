@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { BrainCircuit, Compass, Cpu, GraduationCap, Briefcase, Code, Zap } from 'lucide-react';
+import { BrainCircuit, Compass, Cpu } from 'lucide-react';
 import { NeonButton } from '@/components/ui/neon-button';
 import { ProjectInquiryModal } from '../ProjectInquiryModal';
 
@@ -189,12 +189,12 @@ export function Services() {
               Ready to Get Started?
             </h3>
             <p className="text-gray-400 text-lg leading-relaxed">
-              Whether you're looking to implement AI solutions, need strategic consultation, 
+              Whether you're looking to implement AI solutions, need strategic consultation,
               or want to upskill your team, we're here to help. Let's discuss how we can work together.
             </p>
           </div>
-          
-          <NeonButton 
+
+          <NeonButton
             variant="primary"
             onClick={() => setIsInquiryModalOpen(true)}
           >
@@ -204,7 +204,7 @@ export function Services() {
       </div>
 
       {/* Project Inquiry Modal */}
-      <ProjectInquiryModal 
+      <ProjectInquiryModal
         isOpen={isInquiryModalOpen}
         onClose={() => setIsInquiryModalOpen(false)}
       />
