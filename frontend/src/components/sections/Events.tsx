@@ -1,198 +1,90 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { MapPin, ArrowRight, Terminal, Video, Users } from 'lucide-react';
-import { NeonButton } from '@/components/ui/neon-button';
-import { supabase } from '@/lib/supabase';
-import { Event } from '@/types/events';
+import { Calendar, MapPin, ArrowUpRight } from 'lucide-react';
 
-export function Events() {
-  const [events, setEvents] = useState<Event[]>([]);
-  const [loading, setLoading] = useState(true);
+const EVENTS = [
+  {
+    day: "12",
+    month: "OCT",
+    title: "NEURAL_DESIGN_SUMMIT",
+    loc: "KINGSTON_HILTON",
+    time: "09:00 - 17:00",
+    tags: ["workshop", "networking"]
+  },
+  {
+    day: "28",
+    month: "NOV",
+    title: "AI_ETHICS_FORUM",
+    loc: "UWI_REGIONAL_HQ",
+    time: "14:00 - 18:30",
+    tags: ["panel", "policy"]
+  },
+  {
+    day: "15",
+    month: "DEC",
+    title: "YEAR_END_PROTOCOL",
+    loc: "AC_HOTEL",
+    time: "19:00 - LATE",
+    tags: ["social", "future"]
+  }
+];
 
-  useEffect(() => {
-    fetchUpcomingEvents();
-  }, []);
-
-  const fetchUpcomingEvents = async () => {
-    try {
-      const now = new Date().toISOString();
-      
-      const { data, error } = await supabase
-        .from('events')
-        .select('*')
-        .eq('is_published', true)
-        .gte('start_date', now)
-        .order('start_date', { ascending: true })
-        .limit(3);
-
-      if (error) throw error;
-      setEvents(data || []);
-    } catch (error) {
-      console.error('Error fetching events:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const formatEventDate = (startDate: string) => {
-    const date = new Date(startDate);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric'
-    });
-  };
-
-  const getLocationDisplay = (event: Event) => {
-    if (event.location_type === 'virtual') {
-      return event.meeting_platform || 'Virtual Event';
-    } else if (event.location_type === 'hybrid') {
-      return event.location_name ? `${event.location_name} & Online` : 'Hybrid Event';
-    } else {
-      return event.location_name || event.location_address || 'TBA';
-    }
-  };
-
-  const getEventType = (event: Event) => {
-    return event.event_type?.toUpperCase() || 'EVENT';
-  };
-
+export function EventSection() {
   return (
-    <section id="events" className="py-24 bg-jaia-darkGrey relative scroll-mt-16">
-      <div className="container mx-auto px-6 relative z-10">
-        
-        {/* Header */}
-        <div className="flex items-center gap-4 mb-16">
-          <div className="bg-jaia-green/10 p-3 border border-jaia-green/30">
-            <Terminal className="text-jaia-green w-6 h-6" />
+    <section id="meetup" className="py-24 md:py-40 px-6 max-w-[1400px] mx-auto">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 md:mb-32 gap-4 md:gap-12">
+        <div>
+          <div className="flex items-center gap-3 mb-3 md:mb-6">
+            <div className="w-8 md:w-12 h-[1px] bg-lime" />
+            <span className="mono text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em] md:tracking-[0.5em] text-lime">Transmission_Log</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
-            SYSTEM_<span className="text-jaia-green">LOGS</span>
+          <h2 className="text-4xl md:text-9xl font-black uppercase tracking-tighter leading-[0.85]">
+            EVENT<br />PROTOCOL
           </h2>
         </div>
+        <button className="glass-card px-4 py-2 md:px-10 md:py-6 rounded-full flex items-center gap-2 md:gap-4 text-[10px] md:text-sm font-black uppercase tracking-widest hover:bg-lime hover:text-black transition-all group border-white/10">
+          View Full Calendar
+          <ArrowUpRight className="group-hover:rotate-45 transition-transform" size={16} />
+        </button>
+      </div>
 
-        {loading ? (
-          <div className="flex items-center gap-2 text-jaia-gold font-mono text-sm animate-pulse">
-            <span>&gt; FETCHING_DATA</span>
-            <span className="inline-block w-2 h-4 bg-jaia-gold"></span>
-          </div>
-        ) : events.length === 0 ? (
-          <div className="relative">
-            <div className="bg-white/5 border-l-2 border-jaia-green/50 p-8 max-w-2xl">
-              <div className="flex items-center gap-3 mb-4">
-                <span className="text-jaia-gold font-mono text-xs px-2 py-1 bg-jaia-gold/10 border border-jaia-gold/20">
-                  STANDBY
+      <div className="flex flex-col">
+        {EVENTS.map((ev, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            whileHover={{ x: 20, backgroundColor: 'rgba(255,255,255,0.02)' }}
+            transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+            className="group py-8 md:py-16 border-t border-white/5 flex flex-col md:flex-row items-center gap-6 md:gap-24 cursor-pointer"
+          >
+            <div className="flex flex-col items-center">
+              <span className="text-4xl md:text-6xl font-black text-transparent text-stroke-white group-hover:text-lime group-hover:text-stroke-0 transition-colors">{ev.day}</span>
+              <span className="mono text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/40">{ev.month}</span>
+            </div>
+
+            <div className="flex-grow text-center md:text-left">
+              <h3 className="text-xl md:text-6xl font-black uppercase tracking-tighter mb-2 md:mb-4 group-hover:text-lime transition-colors">{ev.title}</h3>
+              <div className="flex flex-wrap justify-center md:justify-start gap-3 md:gap-6 mono text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-white/40">
+                <span className="flex items-center gap-2"><MapPin size={12} /> {ev.loc}</span>
+                <span className="flex items-center gap-2"><Calendar size={12} /> {ev.time}</span>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2 md:gap-3 justify-center md:justify-start">
+              {ev.tags.map(tag => (
+                <span key={tag} className="px-4 md:px-6 py-1.5 md:py-2 border border-white/10 rounded-full mono text-[9px] uppercase tracking-widest text-white/30 group-hover:border-lime/30 group-hover:text-lime transition-colors">
+                  {tag}
                 </span>
-                <span className="text-gray-500 font-mono text-xs">NO_ACTIVE_EVENTS</span>
-              </div>
-              <h3 className="text-2xl font-display font-bold text-white mb-4">Awaiting New Events</h3>
-              <p className="text-gray-400 font-sans mb-6">
-                We're currently planning our next events. Check back soon for exciting workshops, 
-                meetups, and tech talks!
-              </p>
-              <Link to="/events">
-                <NeonButton variant="secondary">
-                  VIEW_ALL_LOGS
-                </NeonButton>
-              </Link>
-            </div>
-          </div>
-        ) : (
-          <>
-            {/* Timeline Container */}
-            <div className="relative">
-              {/* Circuit Line */}
-              <div className="absolute left-[27px] top-0 bottom-0 w-[2px] bg-white/10 hidden md:block"></div>
-
-              <div className="space-y-12">
-                {events.map((event, idx) => (
-                  <motion.div
-                    key={event.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="relative flex flex-col md:flex-row gap-8 items-start group"
-                  >
-                    {/* Node Dot */}
-                    <div className="hidden md:flex flex-none w-14 h-14 bg-jaia-black border-2 border-white/20 rounded-full items-center justify-center relative z-10 group-hover:border-jaia-gold transition-colors shadow-[0_0_15px_rgba(0,0,0,1)]">
-                       <span className="font-mono text-xs text-gray-500 group-hover:text-jaia-gold">{`0${idx+1}`}</span>
-                    </div>
-
-                    {/* Event Data Block */}
-                    <div className="flex-1 w-full">
-                      <div className="bg-white/5 border-l-2 border-jaia-green/50 p-6 md:p-8 hover:bg-white/10 transition-colors relative overflow-hidden">
-                        
-                        {/* Hover Scanline */}
-                        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-jaia-green/5 to-transparent -translate-y-full group-hover:translate-y-full transition-transform duration-1000"></div>
-
-                        <div className="flex flex-col md:flex-row justify-between md:items-start gap-4 mb-4 relative z-10">
-                          <div>
-                            <div className="flex items-center gap-3 mb-2">
-                               <span className="text-jaia-gold font-mono text-xs px-2 py-1 bg-jaia-gold/10 border border-jaia-gold/20">
-                                 {getEventType(event)}
-                               </span>
-                               <span className="text-gray-500 font-mono text-xs">{formatEventDate(event.start_date)}</span>
-                            </div>
-                            <h3 className="text-2xl md:text-3xl font-display font-bold text-white mb-2">{event.title}</h3>
-                          </div>
-                          {event.registration_url && (
-                            <a 
-                              href={event.registration_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="self-start md:self-center px-4 py-2 bg-black border border-white/20 hover:border-jaia-green text-jaia-green font-mono text-xs flex items-center gap-2 transition-all"
-                            >
-                              REGISTER <ArrowRight size={14} />
-                            </a>
-                          )}
-                        </div>
-
-                        {event.short_description && (
-                          <p className="text-gray-400 font-sans mb-4 max-w-2xl">{event.short_description}</p>
-                        )}
-                        
-                        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 font-mono">
-                          <div className="flex items-center gap-2">
-                            {event.location_type === 'virtual' || event.location_type === 'hybrid' ? (
-                              <Video size={14} />
-                            ) : (
-                              <MapPin size={14} />
-                            )}
-                            {getLocationDisplay(event)}
-                          </div>
-                          {event.max_attendees && (
-                            <div className="flex items-center gap-2">
-                              <Users size={14} />
-                              <span>Max {event.max_attendees}</span>
-                            </div>
-                          )}
-                        </div>
-
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+              ))}
             </div>
 
-            {/* View All Link */}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="mt-16 text-center"
-            >
-              <Link to="/events">
-                <NeonButton variant="secondary">
-                  VIEW_ALL_LOGS
-                </NeonButton>
-              </Link>
-            </motion.div>
-          </>
-        )}
-
+            <div className="hidden md:flex w-16 h-16 rounded-full border border-white/10 items-center justify-center opacity-0 group-hover:opacity-100 transition-all transform group-hover:rotate-45">
+              <ArrowUpRight className="text-lime" />
+            </div>
+          </motion.div>
+        ))}
+        <div className="w-full h-px bg-white/5" />
       </div>
     </section>
   );

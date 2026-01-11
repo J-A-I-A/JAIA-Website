@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, LogOut, User, Shield, Cpu, Wifi, Battery } from 'lucide-react';
+import { Menu, X, ArrowUpRight, LogOut, User, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { AuthModal } from '../auth/AuthModal';
@@ -11,16 +11,10 @@ export function Navigation() {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'signup' | 'magic'>('login');
   const [isAdmin, setIsAdmin] = useState(false);
-  const [time, setTime] = useState(new Date());
   const location = useLocation();
   const navigate = useNavigate();
   const isHomePage = location.pathname === '/';
   const { user, signOut } = useAuth();
-
-  useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
 
   useEffect(() => {
     const checkAdminStatus = async () => {
@@ -47,299 +41,198 @@ export function Navigation() {
     checkAdminStatus();
   }, [user]);
 
-  // Handle hash scrolling when navigating to home page with a hash
-  useEffect(() => {
-    if (isHomePage && location.hash) {
-      const sectionId = location.hash.substring(1);
-      setTimeout(() => {
-        const element = document.getElementById(sectionId);
-        if (element) {
-          const navbarHeight = 80;
-          const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
-          const offsetPosition = elementPosition - navbarHeight;
-          
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth'
-          });
-        }
-      }, 100);
-    }
-  }, [isHomePage, location.hash]);
-
-  const navItems = [
-    { label: 'HOME', href: '/', isRoute: true },
-    { label: 'SERVICES', href: '/#services', isRoute: false },
-    { label: 'PROJECTS', href: '/projects', isRoute: true },
-    { label: 'ABOUT', href: '/#about', isRoute: false },
-    { label: 'EVENTS', href: '/events', isRoute: true },
-    { label: 'DIRECTORY', href: '/directory', isRoute: true },
-    { label: 'CONTACT', href: '/#contact', isRoute: false },
+  const menuItems = [
+    { label: 'Platform', href: '/#about', to: '/', hash: 'about', bgText: 'Roots' },
+    { label: 'Committees', href: '/committees', to: '/committees', bgText: 'Nodes' },
+    { label: 'Directory', href: '/directory', to: '/directory', bgText: 'Network' },
+    { label: 'Events', href: '/events', to: '/events', bgText: 'Gather' },
+    { label: 'Projects', href: '/projects', to: '/projects', bgText: 'Build' },
   ];
 
-  const handleNavClick = (href: string, isRoute: boolean) => {
-    setIsOpen(false);
-    
-    if (!isRoute && isHomePage && href.startsWith('/#')) {
-      const sectionId = href.substring(2);
-      const element = document.getElementById(sectionId);
+  const handleNavClick = (item: typeof menuItems[0]) => {
+    if (item.hash && isHomePage) {
+      const element = document.getElementById(item.hash);
       if (element) {
-        const navbarHeight = 80;
-        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
-        const offsetPosition = elementPosition - navbarHeight;
-        
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        });
+        element.scrollIntoView({ behavior: 'smooth' });
       }
+    } else if (item.to) {
+      navigate(item.to);
     }
+    setIsOpen(false);
   };
 
-  const handleOpenAuthModal = (mode: 'login' | 'signup' | 'magic') => {
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+    setIsOpen(false);
+  };
+
+  const openAuthModal = (mode: 'login' | 'signup' | 'magic') => {
     setAuthMode(mode);
     setAuthModalOpen(true);
-  };
-
-  const handleLogout = async () => {
-    await signOut();
+    setIsOpen(false);
   };
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 p-4 md:p-6 pointer-events-none">
-        <div className="container mx-auto">
-          <div className="flex justify-between items-start">
-            
-            {/* Logo Module */}
-            <Link 
-              to="/" 
-              className="pointer-events-auto bg-jaia-black/80 backdrop-blur-xl border border-jaia-green/30 p-2 pr-6 flex items-center gap-4 clip-tech-left relative overflow-hidden group"
-            >
-              <div className="absolute inset-0 bg-jaia-green/5 group-hover:bg-jaia-green/10 transition-colors"></div>
-              <div className="w-12 h-12 bg-jaia-green flex items-center justify-center relative overflow-hidden">
-                <Cpu className="text-jaia-black w-8 h-8 relative z-10" />
-                <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
-              </div>
-              <div>
-                <h1 className="font-display font-bold text-2xl tracking-tighter leading-none text-white">
-                  JAIA<span className="text-jaia-green">.OS</span>
-                </h1>
-                <div className="flex gap-2 text-[10px] font-mono text-jaia-gold/80">
-                  <span>SYS.ONLINE</span>
-                  <span className="animate-pulse">●</span>
-                </div>
-              </div>
-              
-              {/* Decorative corner */}
-              <div className="absolute top-0 right-0 w-2 h-2 bg-jaia-green"></div>
-            </Link>
+      <nav className="fixed top-0 left-0 w-full z-[100] px-6 py-8 pointer-events-none">
+        <div className="relative z-[101] max-w-screen-2xl mx-auto flex items-center justify-between pointer-events-auto">
+          <Link to="/" className="flex items-center gap-4 cursor-pointer group">
+            <img
+              src="/jaia-logo.png"
+              alt="JAIA Logo"
+              className="w-12 h-12 object-contain brightness-0 invert group-hover:scale-105 transition-transform duration-500"
+            />
+            <span className="text-xl font-black tracking-tighter uppercase text-white hidden sm:block">JAIA</span>
+          </Link>
 
-            {/* Desktop Navigation Module */}
-            <div className="hidden lg:flex pointer-events-auto bg-jaia-black/80 backdrop-blur-xl border border-white/10 px-6 py-3 items-center gap-8 clip-tech-center">
-              {navItems.map((item) => (
-                item.isRoute ? (
-                  <Link
-                    key={item.label}
-                    to={item.href}
-                    className="font-mono text-xs text-gray-400 hover:text-jaia-green transition-colors relative group tracking-widest"
-                  >
-                    <span className="opacity-50 mr-1">//</span>
-                    {item.label}
-                    <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-jaia-green group-hover:w-full transition-all duration-300"></span>
-                  </Link>
-                ) : (
-                  <a
-                    key={item.label}
-                    href={item.href}
-                    onClick={(e) => {
-                      if (item.href.startsWith('/#')) {
-                        e.preventDefault();
-                        if (isHomePage) {
-                          handleNavClick(item.href, false);
-                        } else {
-                          navigate('/' + item.href.substring(1));
-                        }
-                      }
-                    }}
-                    className="font-mono text-xs text-gray-400 hover:text-jaia-green transition-colors relative group tracking-widest"
-                  >
-                    <span className="opacity-50 mr-1">//</span>
-                    {item.label}
-                    <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-jaia-green group-hover:w-full transition-all duration-300"></span>
-                  </a>
-                )
-              ))}
-            </div>
+          <div className="hidden lg:flex items-center gap-1 border-x border-white/5 px-4 h-12">
+            {menuItems.map((item) => (
+              <button
+                key={item.label}
+                onClick={() => handleNavClick(item)}
+                className="px-5 h-full flex items-center text-[10px] mono font-bold uppercase tracking-[0.2em] text-white/40 hover:text-lime hover:bg-white/[0.02] transition-all"
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
 
-            {/* Status Module */}
-            <div className="hidden lg:flex pointer-events-auto bg-jaia-black/80 backdrop-blur-xl border-l-4 border-jaia-gold p-3 gap-6 items-center clip-tech-right font-mono text-[10px] text-gray-400">
-              <div className="flex flex-col items-end">
-                <span className="text-jaia-gold">{time.toLocaleTimeString('en-GB', {hour12: false, timeZone: 'America/Jamaica'})}</span>
-                <span>KINGSTON_NODE</span>
-              </div>
-              <div className="flex gap-3 text-jaia-green">
-                <Wifi size={14} />
-                <Battery size={14} className="animate-pulse" />
-              </div>
-              
-              {/* Auth buttons */}
-              {user ? (
-                <div className="flex items-center gap-3 ml-2 border-l border-white/10 pl-4">
-                  {isAdmin && (
-                    <Link
-                      to="/admin"
-                      className="flex items-center gap-1 text-jaia-gold hover:text-jaia-neonGold transition-colors"
-                    >
-                      <Shield size={12} />
-                      <span>ADMIN</span>
-                    </Link>
-                  )}
+          <div className="flex items-center gap-4">
+            {user ? (
+              <div className="hidden sm:flex items-center gap-3">
+                {isAdmin && (
                   <Link
-                    to="/profile/edit"
-                    className="flex items-center gap-1 hover:text-jaia-green transition-colors"
+                    to="/admin"
+                    className="flex items-center gap-2 bg-white/5 text-white px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-lime hover:text-black transition-all"
                   >
-                    <User size={12} />
+                    <Shield size={14} />
+                    Admin
                   </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center gap-1 hover:text-red-400 transition-colors"
-                  >
-                    <LogOut size={12} />
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={() => handleOpenAuthModal('magic')}
-                  className="ml-2 border-l border-white/10 pl-4 text-jaia-green hover:text-jaia-neonGreen transition-colors"
+                )}
+                <Link
+                  to="/profile/edit"
+                  className="flex items-center gap-2 bg-white text-black px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-lime transition-all"
                 >
-                  LOGIN
-                </button>
-              )}
-            </div>
-
-            {/* Mobile Toggle */}
-            <button 
-              className="lg:hidden pointer-events-auto bg-jaia-green text-jaia-black p-3 clip-square hover:bg-white transition-colors"
+                  <User size={14} />
+                  Profile
+                </Link>
+              </div>
+            ) : (
+              <button
+                onClick={() => openAuthModal('login')}
+                className="hidden sm:flex items-center gap-3 bg-white text-black px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-lime transition-all"
+              >
+                Join_Hub <ArrowUpRight size={14} />
+              </button>
+            )}
+            <button
+              className="w-12 h-12 glass-panel rounded-full flex items-center justify-center text-white hover:border-lime/40 transition-all"
               onClick={() => setIsOpen(!isOpen)}
             >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
+              {isOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
-
           </div>
         </div>
-      </nav>
 
-      {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, x: '100%' }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: '100%' }}
-            transition={{ type: "spring", damping: 20 }}
-            className="fixed inset-0 z-40 bg-jaia-black/95 backdrop-blur-xl flex items-center justify-center border-l border-jaia-green/30"
-          >
-            <div className="w-full max-w-sm p-8">
-              <div className="border-b border-jaia-green/30 pb-4 mb-8">
-                <p className="font-mono text-jaia-gold text-xs">SYSTEM_NAVIGATION</p>
-              </div>
-              <div className="flex flex-col space-y-6">
-                {navItems.map((item, idx) => (
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0, x: '100%' }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed inset-0 bg-charcoal z-[90] pointer-events-auto flex flex-col justify-center p-12 md:p-24 overflow-hidden"
+            >
+              {/* Visual sidebar accent */}
+              <div className="absolute left-0 top-0 bottom-0 w-2 bg-lime/60" />
+
+              <div className="flex flex-col gap-4 md:gap-6 relative z-10">
+                {menuItems.map((item, i) => (
                   <motion.div
                     key={item.label}
-                    initial={{ x: 50, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: idx * 0.1 }}
+                    initial={{ opacity: 0, x: 100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    className="relative group cursor-pointer"
+                    onClick={() => handleNavClick(item)}
                   >
-                    {item.isRoute ? (
-                      <Link
-                        to={item.href}
-                        onClick={() => setIsOpen(false)}
-                        className="text-3xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500 hover:from-jaia-green hover:to-jaia-gold transition-all block"
-                      >
-                        {item.label}
-                      </Link>
-                    ) : (
-                      <a
-                        href={item.href}
-                        onClick={(e) => {
-                          if (item.href.startsWith('/#')) {
-                            e.preventDefault();
-                            if (isHomePage) {
-                              handleNavClick(item.href, false);
-                            } else {
-                              navigate('/' + item.href.substring(1));
-                            }
-                          }
-                          setIsOpen(false);
-                        }}
-                        className="text-3xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500 hover:from-jaia-green hover:to-jaia-gold transition-all block"
-                      >
-                        {item.label}
-                      </a>
-                    )}
+                    <span className="relative z-10 block text-2xl md:text-4xl font-black uppercase tracking-tighter text-white group-hover:text-lime transition-colors">
+                      {item.label}
+                    </span>
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 text-4xl md:text-6xl font-black uppercase tracking-tighter text-white/[0.03] pointer-events-none select-none -z-10 group-hover:text-lime/[0.05] transition-colors">
+                      {item.bgText}
+                    </span>
                   </motion.div>
                 ))}
-              </div>
-              
-              {/* Mobile Auth Section */}
-              <div className="mt-12 p-4 bg-white/5 border border-white/10 font-mono text-xs text-gray-500">
-                <p>LAT: 18.0179° N</p>
-                <p>LON: 76.8099° W</p>
-                <p className="mt-2 text-jaia-green">STATUS: CONNECTED</p>
-                
-                <div className="mt-4 pt-4 border-t border-white/10">
-                  {user ? (
-                    <div className="space-y-3">
-                      <Link
-                        to="/profile/edit"
-                        className="flex items-center gap-2 text-gray-400 hover:text-jaia-green transition-colors"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        <User size={14} />
-                        <span className="truncate">{user.email}</span>
-                      </Link>
-                      {isAdmin && (
-                        <Link
-                          to="/admin"
-                          onClick={() => setIsOpen(false)}
-                          className="flex items-center gap-2 text-jaia-gold hover:text-jaia-neonGold transition-colors"
-                        >
-                          <Shield size={14} />
-                          <span>Admin Panel</span>
-                        </Link>
-                      )}
-                      <button
-                        onClick={() => {
-                          handleLogout();
-                          setIsOpen(false);
-                        }}
-                        className="flex items-center gap-2 text-red-400 hover:text-red-300 transition-colors"
-                      >
-                        <LogOut size={14} />
-                        Logout
-                      </button>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        handleOpenAuthModal('magic');
-                        setIsOpen(false);
-                      }}
-                      className="w-full py-2 bg-jaia-green text-jaia-black font-bold hover:bg-jaia-neonGreen transition-colors"
+
+                {/* User Actions in Menu */}
+                {user ? (
+                  <motion.div
+                    initial={{ opacity: 0, x: 100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: menuItems.length * 0.05 }}
+                    className="flex flex-col gap-3 mt-6 border-t border-white/5 pt-6"
+                  >
+                    <Link
+                      to="/profile/edit"
+                      onClick={() => setIsOpen(false)}
+                      className="text-lg md:text-2xl font-black uppercase tracking-tighter text-white/60 hover:text-lime transition-colors"
                     >
-                      LOGIN / SIGNUP
+                      Profile
+                    </Link>
+                    {isAdmin && (
+                      <Link
+                        to="/admin"
+                        onClick={() => setIsOpen(false)}
+                        className="text-lg md:text-2xl font-black uppercase tracking-tighter text-white/60 hover:text-lime transition-colors flex items-center gap-3"
+                      >
+                        <Shield size={20} />
+                        Admin
+                      </Link>
+                    )}
+                    <button
+                      onClick={handleSignOut}
+                      className="text-lg md:text-2xl font-black uppercase tracking-tighter text-white/60 hover:text-lime transition-colors text-left flex items-center gap-3"
+                    >
+                      <LogOut size={20} />
+                      Sign Out
                     </button>
-                  )}
-                </div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    initial={{ opacity: 0, x: 100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: menuItems.length * 0.05 }}
+                    className="flex flex-col gap-3 mt-6 border-t border-white/5 pt-6"
+                  >
+                    <button
+                      onClick={() => openAuthModal('login')}
+                      className="text-lg md:text-2xl font-black uppercase tracking-tighter text-white/60 hover:text-lime transition-colors text-left"
+                    >
+                      Login
+                    </button>
+                    <button
+                      onClick={() => openAuthModal('signup')}
+                      className="text-lg md:text-2xl font-black uppercase tracking-tighter text-white/60 hover:text-lime transition-colors text-left"
+                    >
+                      Sign Up
+                    </button>
+                  </motion.div>
+                )}
               </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      
-      {/* Auth Modal */}
+
+              <div className="mt-12 border-t border-white/5 pt-8 flex flex-wrap gap-6 text-[10px] mono text-white/20 uppercase tracking-[0.4em]">
+                <div>[ STATUS: OPERATIONAL ]</div>
+                <div className="hidden md:block">///</div>
+                <div>[ LOCATION: KGN_NODE ]</div>
+                <div className="md:ml-auto">© 2024 JAIA.INTEL</div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </nav>
+
       <AuthModal
         isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}

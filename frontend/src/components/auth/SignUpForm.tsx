@@ -1,15 +1,12 @@
 import { useState, FormEvent } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
 
 interface SignUpFormProps {
   onSuccess?: () => void;
   onSwitchToLogin?: () => void;
-  onSwitchToMagic?: () => void;
 }
 
-export function SignUpForm({ onSuccess, onSwitchToLogin, onSwitchToMagic }: SignUpFormProps) {
+export function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -55,42 +52,45 @@ export function SignUpForm({ onSuccess, onSwitchToLogin, onSwitchToMagic }: Sign
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-black uppercase tracking-tighter text-white mb-2">Initialize Node</h2>
+        <p className="mono text-[10px] text-white/40 uppercase tracking-widest">Create New Identity</p>
+      </div>
+
       {success ? (
-        <div className="text-green-600 text-center bg-green-50 dark:bg-green-900/20 p-4 rounded space-y-3">
-          <div className="text-4xl">📧</div>
-          <p className="font-bold text-lg">Check your email!</p>
-          <p className="text-sm text-gray-700 dark:text-gray-300">
-            We've sent a confirmation link to <strong>{email}</strong>
+        <div className="text-lime text-center bg-lime/10 border border-lime/30 p-8 rounded-[2rem] space-y-4">
+          <div className="text-4xl animate-bounce">⚡</div>
+          <p className="font-black uppercase tracking-widest text-lg">Signal Sent!</p>
+          <p className="text-xs font-mono text-white/70">
+            CONFIRMATION_PACKET DISPATCHED TO: <br />
+            <strong className="text-white">{email}</strong>
           </p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Click the link in the email to verify your account and complete signup.
-          </p>
-          <p className="text-xs text-gray-500 dark:text-gray-500 pt-2">
-            Didn't receive it? Check your spam folder or try signing up again.
+          <p className="text-[10px] text-white/40 uppercase tracking-widest pt-4">
+            CHECK_INBOX // CHECK_SPAM // VERIFY
           </p>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-2">
-              Email
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-2">
+            <label htmlFor="email" className="block mono text-[10px] uppercase tracking-widest font-bold text-lime/70">
+              Email_Address
             </label>
-            <Input
+            <input
               id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="your@email.com"
+              placeholder="IDENTITY@JAIA.AI"
               required
               disabled={loading}
+              className="w-full bg-white/5 border border-white/10 p-4 rounded-xl focus:outline-none focus:border-lime text-white mono text-xs font-bold tracking-widest placeholder:text-white/10 transition-colors"
             />
           </div>
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-2">
-              Password
+          <div className="space-y-2">
+            <label htmlFor="password" className="block mono text-[10px] uppercase tracking-widest font-bold text-lime/70">
+              Create_Access_Key
             </label>
-            <Input
+            <input
               id="password"
               type="password"
               value={password}
@@ -98,13 +98,14 @@ export function SignUpForm({ onSuccess, onSwitchToLogin, onSwitchToMagic }: Sign
               placeholder="••••••••"
               required
               disabled={loading}
+              className="w-full bg-white/5 border border-white/10 p-4 rounded-xl focus:outline-none focus:border-lime text-white mono text-xs font-bold tracking-widest placeholder:text-white/10 transition-colors"
             />
           </div>
-          <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium mb-2">
-              Confirm Password
+          <div className="space-y-2">
+            <label htmlFor="confirmPassword" className="block mono text-[10px] uppercase tracking-widest font-bold text-lime/70">
+              Confirm_Key
             </label>
-            <Input
+            <input
               id="confirmPassword"
               type="password"
               value={confirmPassword}
@@ -112,40 +113,36 @@ export function SignUpForm({ onSuccess, onSwitchToLogin, onSwitchToMagic }: Sign
               placeholder="••••••••"
               required
               disabled={loading}
+              className="w-full bg-white/5 border border-white/10 p-4 rounded-xl focus:outline-none focus:border-lime text-white mono text-xs font-bold tracking-widest placeholder:text-white/10 transition-colors"
             />
           </div>
+
           {error && (
-            <div className="text-red-600 text-sm bg-red-50 p-3 rounded">
-              {error}
+            <div className="text-red-400 text-xs bg-red-900/20 border border-red-500/20 p-4 rounded-xl mono">
+              {'>'} ERROR: {error}
             </div>
           )}
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Creating account...' : 'Sign Up'}
-          </Button>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-lime text-black py-4 rounded-xl font-black uppercase tracking-[0.2em] text-xs hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_20px_rgba(204,255,0,0.1)] disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? 'INITIALIZING...' : 'ESTABLISH_NODE'}
+          </button>
         </form>
       )}
       {!success && (
-        <div className="mt-4 space-y-2">
+        <div className="mt-8 space-y-4">
           {onSwitchToLogin && (
-            <p className="text-center text-sm">
-              Already have an account?{' '}
+            <p className="text-center text-xs text-white/40">
+              ALREADY_OPTIMIZED?{' '}
               <button
                 type="button"
                 onClick={onSwitchToLogin}
-                className="text-blue-600 hover:underline font-medium"
+                className="text-lime hover:underline font-bold uppercase tracking-widest ml-1"
               >
-                Log in
-              </button>
-            </p>
-          )}
-          {onSwitchToMagic && (
-            <p className="text-center text-sm">
-              <button
-                type="button"
-                onClick={onSwitchToMagic}
-                className="text-purple-600 hover:underline font-medium"
-              >
-                ← Back to passwordless login
+                ACCESS_SYSTEM
               </button>
             </p>
           )}

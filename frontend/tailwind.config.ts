@@ -9,8 +9,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Rajdhani', 'sans-serif'],
-        display: ['Space Grotesk', 'sans-serif'],
+        sans: ['Inter', 'sans-serif'],
+        display: ['Inter', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       colors: {
@@ -47,12 +47,9 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        jamaican: {
-          gold: "hsl(var(--jamaican-gold))",
-          green: "hsl(var(--jamaican-green))",
-          black: "hsl(var(--jamaican-black))",
-        },
-        // New cyber theme colors
+        // New JAIA Design System
+        lime: '#ccff00',
+        charcoal: '#030303',
         jaia: {
           black: '#020202',
           void: '#000000',
@@ -63,6 +60,7 @@ export default {
           darkGreen: '#003312',
           darkGrey: '#0A0A0A',
           cyberGray: '#1a1a1a',
+          lime: '#ccff00',
         }
       },
       borderRadius: {
@@ -76,6 +74,7 @@ export default {
         'glitch': 'glitch 1s linear infinite',
         'marquee': 'marquee 25s linear infinite',
         'scan': 'scan 4s linear infinite',
+        'shine': 'shine 3s linear infinite',
       },
       keyframes: {
         glitch: {
@@ -90,6 +89,10 @@ export default {
         scan: {
           '0%': { backgroundPosition: '0% 0%' },
           '100%': { backgroundPosition: '0% 100%' },
+        },
+        shine: {
+          '0%': { backgroundPosition: '200% center' },
+          '100%': { backgroundPosition: '-200% center' },
         }
       },
       backgroundImage: {
