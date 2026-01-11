@@ -54,7 +54,7 @@ export function Footer() {
         </div>
       </div>
       <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between text-xs text-white/20 font-medium tracking-widest uppercase">
-        <p>&copy; 2024 JAIA INTELLIGENCE. ALL RIGHTS RESERVED.</p>
+        <p>&copy; {new Date().getFullYear()} JAIA INTELLIGENCE. ALL RIGHTS RESERVED.</p>
         <p>DESIGNED IN THE NEURAL SPACE.</p>
       </div>
     </footer>

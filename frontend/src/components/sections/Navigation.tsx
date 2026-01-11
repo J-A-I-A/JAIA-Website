@@ -226,7 +226,7 @@ export function Navigation() {
                 <div>[ STATUS: OPERATIONAL ]</div>
                 <div className="hidden md:block">///</div>
                 <div>[ LOCATION: KGN_NODE ]</div>
-                <div className="md:ml-auto">© 2024 JAIA.INTEL</div>
+                <div className="md:ml-auto">© {new Date().getFullYear()} JAIA.INTEL</div>
               </div>
             </motion.div>
           )}
