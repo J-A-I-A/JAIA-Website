@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: #e0e0e0;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #000000;
+    }
+    .container {
+      background-color: #020202;
+      border: 1px solid #009B3A;
+    }
+    .header {
+      text-align: center;
+      padding: 40px 20px 30px;
+      background-color: #0a0a0a;
+      border-bottom: 2px solid #009B3A;
+      position: relative;
+    }
+    .status-bar {
+      display: inline-block;
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: #009B3A;
+      border: 1px solid #009B3A;
+      padding: 6px 16px;
+      margin-bottom: 20px;
+      background-color: rgba(0, 155, 58, 0.05);
+    }
+    .status-indicator {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background-color: #009B3A;
+      margin-right: 8px;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .logo {
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      font-size: 36px;
+      font-weight: bold;
+      color: #ffffff;
+      margin: 0;
+      letter-spacing: 0.1em;
+    }
+    .tagline {
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      color: #FFD700;
+      font-size: 12px;
+      margin-top: 8px;
+      letter-spacing: 0.2em;
+    }
+    .content {
+      background-color: #0a0a0a;
+      padding: 40px 30px;
+      color: #e0e0e0;
+    }
+    .content p {
+      margin: 16px 0;
+    }
+    .tech-heading {
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      color: #FFD700;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      margin: 0 0 10px 0;
+      text-transform: uppercase;
+    }
+    h2 {
+      color: #ffffff;
+      margin-top: 0;
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .inquiry-details {
+      background-color: rgba(0, 155, 58, 0.05);
+      padding: 24px;
+      border-left: 3px solid #009B3A;
+      margin: 24px 0;
+    }
+    .detail-row {
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+    }
+    .detail-row:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+    .detail-label {
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      color: #FFD700;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .detail-value {
+      color: #ffffff;
+      font-size: 14px;
+      word-break: break-word;
+    }
+    .message-content {
+      background-color: rgba(0, 0, 0, 0.3);
+      padding: 16px;
+      border-radius: 4px;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .info-note {
+      background-color: rgba(255, 215, 0, 0.05);
+      padding: 20px;
+      border-left: 3px solid #FFD700;
+      margin: 24px 0;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+    .info-note strong {
+      color: #FFD700;
+    }
+    .footer {
+      background-color: #000000;
+      padding: 30px;
+      border-top: 1px solid #009B3A;
+      text-align: center;
+      font-size: 12px;
+      color: #666666;
+    }
+    .footer-title {
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      color: #ffffff;
+      font-weight: bold;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+    .footer-location {
+      color: #FFD700;
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      margin: 8px 0;
+    }
+    .footer a {
+      color: #009B3A;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s ease;
+    }
+    .footer a:hover {
+      border-bottom-color: #009B3A;
+    }
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, #009B3A, transparent);
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="status-bar">
+        <span class="status-indicator"></span>
+        JAMAICA AI ASSOCIATION
+      </div>
+      <h1 class="logo">JAIA</h1>
+      <p class="tagline">BUSINESS INQUIRY</p>
+    </div>
+    
+    <div class="content">
+      <p class="tech-heading">&gt; INQUIRY_RECEIVED</p>
+      <h2>Thank You for Reaching Out</h2>
+      
+      <p>We've received your inquiry and are excited to learn more about how we can help. A member of our team will review the details below and be in touch shortly to discuss next steps.</p>
+      
+      <div class="inquiry-details">
+        <div class="detail-row">
+          <div class="detail-label">Contact Name</div>
+          <div class="detail-value">{{name}}</div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">Email Address</div>
+          <div class="detail-value">{{email}}</div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">Company / Organization</div>
+          <div class="detail-value">{{company}}</div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">Message</div>
+          <div class="detail-value message-content">{{message}}</div>
+        </div>
+      </div>
+      
+      <div class="info-note">
+        <strong>What happens next?</strong><br>
+        • Our team will review your inquiry within 1-2 business days<br>
+        • We'll reach out via email to schedule a discovery call<br>
+        • Feel free to reply to this email with any additional information<br>
+        • Both parties are included in this thread for easy communication
+      </div>
+      
+      <div class="divider"></div>
+      
+      <p class="tech-heading">ABOUT JAIA</p>
+      <p>The Jamaica Artificial Intelligence Association is dedicated to accelerating AI innovation across the Caribbean. Whether you need AI development, strategic consultation, or training for your team, we're here to help organizations leverage AI technology effectively.</p>
+      
+      <div class="divider"></div>
+      
+      <p>Looking forward to collaborating with you.</p>
+      
+      <p>
+        <strong style="color: #FFD700;">— The JAIA Team</strong>
+      </p>
+    </div>
+    
+    <div class="footer">
+      <p class="footer-title">JAMAICA ARTIFICIAL INTELLIGENCE ASSOCIATION</p>
+      <p class="footer-location">KINGSTON • JAMAICA</p>
+      <p style="margin: 15px 0;">
+        <a href="https://jaia-website.fly.dev">jaia-website.fly.dev</a><br>
+        <a href="mailto:admin@jaia.org.jm">admin@jaia.org.jm</a>
+      </p>
+      <div class="divider"></div>
+      <p style="margin-top: 15px; font-size: 11px;">
+        Need help?<br>
+        <a href="https://chat.whatsapp.com/FFzjagZ0ZxRCCHaNMjJODm">WhatsApp</a> • 
+        <a href="https://discord.gg/NuVXk7yjNz">Discord</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+
+

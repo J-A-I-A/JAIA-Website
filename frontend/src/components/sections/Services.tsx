@@ -1,5 +1,8 @@
 import { motion } from 'framer-motion';
 import { GraduationCap, Briefcase, Code, Zap } from 'lucide-react';
+import { useState } from 'react';
+import { NeonButton } from '@/components/ui/neon-button';
+import { ProjectInquiryModal } from '../ProjectInquiryModal';
 
 const services = [
   {
@@ -29,6 +32,8 @@ const services = [
 ];
 
 export function Services() {
+  const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
+
   return (
     <section id="services" className="py-32 bg-jaia-black relative overflow-hidden scroll-mt-16">
       {/* Background Pattern */}
@@ -112,7 +117,42 @@ export function Services() {
             </motion.div>
           ))}
         </div>
+
+        {/* CTA Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.5 }}
+          className="mt-24 text-center border-t border-jaia-gold/20 pt-16"
+        >
+          <div className="max-w-2xl mx-auto mb-8">
+            <p className="font-mono text-jaia-gold text-xs tracking-widest mb-4">
+              &gt; READY_TO_CONNECT
+            </p>
+            <h3 className="text-3xl md:text-4xl font-display font-bold text-white mb-6">
+              Ready to Get Started?
+            </h3>
+            <p className="text-gray-400 text-lg leading-relaxed">
+              Whether you're looking to implement AI solutions, need strategic consultation, 
+              or want to upskill your team, we're here to help. Let's discuss how we can work together.
+            </p>
+          </div>
+          
+          <NeonButton 
+            variant="primary"
+            onClick={() => setIsInquiryModalOpen(true)}
+          >
+            Get_In_Touch()
+          </NeonButton>
+        </motion.div>
       </div>
+
+      {/* Project Inquiry Modal */}
+      <ProjectInquiryModal 
+        isOpen={isInquiryModalOpen}
+        onClose={() => setIsInquiryModalOpen(false)}
+      />
     </section>
   );
 }

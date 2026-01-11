@@ -1,9 +1,12 @@
+import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import crypto from 'crypto';
 import { createClient } from '@supabase/supabase-js';
+import { Resend } from 'resend';
+import fs from 'fs/promises';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,6 +21,10 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabase = supabaseUrl && supabaseServiceKey 
   ? createClient(supabaseUrl, supabaseServiceKey)
   : null;
+
+// Resend client for email
+const resendApiKey = process.env.RESEND_API_KEY;
+const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
 // Fygaro webhook secret
 const fygaroSecret = process.env.FYGARO_WEBHOOK_SECRET;
@@ -89,6 +96,58 @@ app.get('/api/events', (req: Request, res: Response) => {
       date: '19th April 2025, 8pm'
     }
   ]);
+});
+
+// Project inquiry endpoint
+app.post('/api/project-inquiry', async (req: Request, res: Response) => {
+  // Check if Resend is configured
+  if (!resend) {
+    console.error('Resend API key not configured');
+    res.status(500).json({ error: 'Email service not configured' });
+    return;
+  }
+
+  // Validate request body
+  const { name, email, company, message } = req.body;
+
+  if (!name || !email || !company || !message) {
+    res.status(400).json({ error: 'All fields are required' });
+    return;
+  }
+
+  // Validate email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    res.status(400).json({ error: 'Invalid email format' });
+    return;
+  }
+
+  try {
+    // Read email template
+    const templatePath = path.join(__dirname, '../../scripts/email-templates/project-inquiry.html');
+    let emailHtml = await fs.readFile(templatePath, 'utf-8');
+
+    // Replace placeholders
+    emailHtml = emailHtml.replace(/{{name}}/g, name);
+    emailHtml = emailHtml.replace(/{{email}}/g, email);
+    emailHtml = emailHtml.replace(/{{company}}/g, company);
+    emailHtml = emailHtml.replace(/{{message}}/g, message);
+
+    // Send email to both client and admin to start the conversation thread
+    const result = await resend.emails.send({
+      from: 'JAIA <no-reply@notifications.jaia.org.jm>',
+      to: [email, 'admin@jaia.org.jm'],
+      subject: `New Business Inquiry from ${company}`,
+      html: emailHtml,
+      replyTo: 'admin@jaia.org.jm', // Replies go to admin, not no-reply
+    });
+
+    console.log('Project inquiry email sent:', result);
+    res.status(200).json({ success: true, message: 'Inquiry sent successfully' });
+  } catch (error) {
+    console.error('Error sending project inquiry email:', error);
+    res.status(500).json({ error: 'Failed to send inquiry' });
+  }
 });
 
 // Fygaro webhook endpoint for payment notifications
